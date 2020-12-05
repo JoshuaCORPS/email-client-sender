@@ -1,5 +1,8 @@
 const { promisify } = require('util');
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+
+const sendEmail = require('../util/email');
 const Client = require('../models/clientModel');
 
 const signToken = (id) => {
@@ -10,16 +13,36 @@ const signToken = (id) => {
 
 exports.register = async (req, res) => {
   try {
+    const verifyToken = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(verifyToken)
+      .digest('hex');
+
     const client = await Client.create({
       name: req.body.name,
       email: req.body.email,
       password: req.body.password,
       passwordConfirm: req.body.passwordConfirm,
+      emailVerifyToken: hashedToken,
     });
 
     const token = signToken(client._id);
 
     client.password = undefined;
+
+    const verifyURL = `${req.protocol}://${req.get(
+      'host'
+    )}/api/v1/auth/verify/${verifyToken}`;
+
+    const message = `To activate your account, please verify your email address.\nYour account will not be created until your email address is confirmed.\n\nClick this link to activate your account: ${verifyURL}`;
+
+    await sendEmail({
+      from: 'Sender account@sender.com',
+      email: req.body.email,
+      subject: 'Verify Your Account',
+      message,
+    });
 
     res.status(200).json({
       status: 'success',
@@ -46,7 +69,10 @@ exports.login = async (req, res) => {
         message: 'Please provide your email and password to proceed',
       });
 
-    const client = await Client.findOne({ email }).select('+password');
+    const client = await Client.findOne({
+      email,
+      active: { $ne: false },
+    }).select('+password');
 
     if (!client || !(await client.isPasswordCorrect(password, client.password)))
       return res.status(401).json({
@@ -57,8 +83,6 @@ exports.login = async (req, res) => {
     const token = signToken(client._id);
 
     client.password = undefined;
-
-    console.log(req.headers);
 
     res.status(200).json({
       status: 'success',
@@ -105,4 +129,51 @@ exports.protect = async (req, res, next) => {
 
   req.client = client;
   next();
+};
+
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.client.role)) {
+      return res.status(403).json({
+        status: 'fail',
+        message: 'You do not have permission to perform this action',
+      });
+    }
+    next();
+  };
+};
+
+exports.verifyEmail = async (req, res) => {
+  try {
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(req.params.token)
+      .digest('hex');
+
+    const client = await Client.findOne({
+      emailVerifyToken: hashedToken,
+      active: false,
+    });
+
+    if (!client)
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Invalid token',
+      });
+
+    client.active = true;
+    client.emailVerifyToken = undefined;
+
+    await client.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Account successfully activated',
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
 };
