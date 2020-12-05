@@ -5,18 +5,17 @@ const clientController = require('../controllers/clientController');
 
 const Router = express.Router();
 
-Router.get('/', clientController.getAllClients);
-
 Router.use(authController.protect);
 
-Router.post('/send-email', clientController.sendEmailToClients);
-
-Router.route('/users/:userid')
-  .get(clientController.getUser)
-  .patch(clientController.updateUser);
+Router.post('/send-email', clientController.sendEmailToUsers);
 
 Router.route('/users')
   .get(clientController.getAllUsers)
   .post(clientController.addUser);
+
+Router.route('/users/:userid')
+  .get(clientController.getUser)
+  .patch(clientController.updateUser)
+  .delete(clientController.deleteUser);
 
 module.exports = Router;
