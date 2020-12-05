@@ -1,6 +1,7 @@
 const Client = require('../models/clientModel');
 const User = require('../models/userModel');
 const sendEmail = require('../util/email');
+const filterObj = require('../util/filterObjBody');
 
 exports.addUser = async (req, res) => {
   try {
@@ -17,7 +18,7 @@ exports.addUser = async (req, res) => {
 
     await client.save({ validateBeforeSave: false });
 
-    res.status(200).json({
+    res.status(201).json({
       status: 'success',
       data: {
         user,
@@ -73,4 +74,77 @@ exports.getAllClients = async (req, res) => {
       clients,
     },
   });
+};
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    const client = await Client.findById(req.client.id);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        users: client.users,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
+};
+
+exports.getUser = async (req, res) => {
+  try {
+    const client = await Client.findById(req.client.id);
+
+    if (!client.users.some((user) => user.id === req.params.userid))
+      return res.status(404).json({
+        status: 'fail',
+        message: 'user not found',
+      });
+
+    const user = await User.findById(req.params.userid);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  try {
+    const filteredBody = filterObj(req.body, 'name', 'email');
+
+    const user = await User.findByIdAndUpdate(req.params.userid, filteredBody, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!user)
+      return res.status(404).json({
+        status: 'fail',
+        message: 'user not found',
+      });
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
 };
