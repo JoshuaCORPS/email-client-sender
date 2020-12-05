@@ -6,5 +6,6 @@ const Router = express.Router();
 
 Router.post('/register', authController.register);
 Router.post('/login', authController.login);
+Router.post('/verify/:token', authController.verifyEmail);
 
 module.exports = Router;
