@@ -32,7 +32,7 @@ exports.addUser = async (req, res) => {
   }
 };
 
-exports.sendEmailToClients = async (req, res) => {
+exports.sendEmailToUsers = async (req, res) => {
   try {
     const { subject, message } = req.body;
 
@@ -65,25 +65,15 @@ exports.sendEmailToClients = async (req, res) => {
   }
 };
 
-exports.getAllClients = async (req, res) => {
-  const clients = await Client.find();
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      clients,
-    },
-  });
-};
-
 exports.getAllUsers = async (req, res) => {
   try {
-    const client = await Client.findById(req.client.id);
+    const clients = await Client.findById(req.client.id);
 
     res.status(200).json({
       status: 'success',
+      results: clients.users.length,
       data: {
-        users: client.users,
+        users: clients.users,
       },
     });
   } catch (error) {
@@ -122,6 +112,18 @@ exports.getUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   try {
+    const client = await Client.findById(req.client.id);
+
+    const index = client.users.findIndex(
+      (user) => user.id === req.params.userid
+    );
+
+    if (index === -1)
+      return res.status(404).json({
+        status: 'fail',
+        message: 'user not found',
+      });
+
     const filteredBody = filterObj(req.body, 'name', 'email');
 
     const user = await User.findByIdAndUpdate(req.params.userid, filteredBody, {
@@ -129,17 +131,41 @@ exports.updateUser = async (req, res) => {
       runValidators: true,
     });
 
-    if (!user)
-      return res.status(404).json({
-        status: 'fail',
-        message: 'user not found',
-      });
-
     res.status(200).json({
       status: 'success',
       data: {
         user,
       },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const client = await Client.findById(req.client.id);
+
+    const index = client.users.findIndex(
+      (user) => user.id === req.params.userid
+    );
+
+    if (index === -1)
+      return res.status(404).json({
+        status: 'fail',
+        message: 'user not found',
+      });
+
+    client.users.splice(index, 1);
+
+    await client.save({ validateBeforeSave: false });
+
+    res.status(204).json({
+      message: 'success',
+      data: null,
     });
   } catch (error) {
     res.status(500).json({
