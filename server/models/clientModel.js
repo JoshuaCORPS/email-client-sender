@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
@@ -36,6 +37,16 @@ const clientSchema = new mongoose.Schema({
       ref: 'User',
     },
   ],
+  role: {
+    type: String,
+    enum: ['client', 'admin'],
+    default: 'client',
+  },
+  active: {
+    type: Boolean,
+    default: false,
+  },
+  emailVerifyToken: String,
 });
 
 clientSchema.pre('save', async function (next) {
