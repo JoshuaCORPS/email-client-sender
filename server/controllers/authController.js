@@ -11,6 +11,28 @@ const signToken = (id) => {
   });
 };
 
+const createSendCookieTokenResponse = (client, statusCode, res, req) => {
+  const token = signToken(client._id);
+
+  const cookieOption = {
+    httpOnly: true,
+    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+  };
+
+  res.cookie('jwt', token, cookieOption);
+
+  client.password = undefined;
+
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: {
+      client,
+    },
+  });
+};
+
 exports.register = async (req, res) => {
   try {
     const verifyToken = crypto.randomBytes(32).toString('hex');
@@ -27,10 +49,6 @@ exports.register = async (req, res) => {
       emailVerifyToken: hashedToken,
     });
 
-    const token = signToken(client._id);
-
-    client.password = undefined;
-
     const verifyURL = `${req.protocol}://${req.get(
       'host'
     )}/api/v1/auth/verify/${verifyToken}`;
@@ -44,13 +62,7 @@ exports.register = async (req, res) => {
       message,
     });
 
-    res.status(200).json({
-      status: 'success',
-      token,
-      data: {
-        client,
-      },
-    });
+    createSendCookieTokenResponse(client, 201, res, req);
   } catch (error) {
     res.status(500).json({
       status: 'error',
@@ -80,17 +92,7 @@ exports.login = async (req, res) => {
         message: 'Incorrect email or password',
       });
 
-    const token = signToken(client._id);
-
-    client.password = undefined;
-
-    res.status(200).json({
-      status: 'success',
-      token,
-      data: {
-        client,
-      },
-    });
+    createSendCookieTokenResponse(client, 200, res, req);
   } catch (error) {
     res.status(500).json({
       status: 'error',
@@ -107,6 +109,9 @@ exports.protect = async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   )
     token = req.headers.authorization.split(' ')[1];
+  else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
+  }
 
   if (!token)
     return res.status(401).json({
