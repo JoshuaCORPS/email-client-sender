@@ -4,6 +4,7 @@ const User = require('../models/userModel');
 const sendEmail = require('../util/email');
 const filterObj = require('../util/filterObjBody');
 const catchAsync = require('../util/catchAsync');
+const AppError = require('../util/appError');
 
 exports.addUser = catchAsync(async (req, res, next) => {
   const user = await User.create({
@@ -31,10 +32,9 @@ exports.sendEmailToUsers = catchAsync(async (req, res, next) => {
   const { subject, message } = req.body;
 
   if (!subject || !message)
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Please provide the subject and body to send the email.',
-    });
+    return next(
+      new AppError('Please provide the subject and body to send the email', 400)
+    );
 
   const clients = await Client.findById(req.client.id);
 
@@ -69,10 +69,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
   const client = await Client.findById(req.client.id);
 
   if (!client.users.some((user) => user.id === req.params.userid))
-    return res.status(404).json({
-      status: 'fail',
-      message: 'user not found',
-    });
+    return next(new AppError('user not found', 404));
 
   const user = await User.findById(req.params.userid);
 
@@ -89,11 +86,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 
   const index = client.users.findIndex((user) => user.id === req.params.userid);
 
-  if (index === -1)
-    return res.status(404).json({
-      status: 'fail',
-      message: 'user not found',
-    });
+  if (index === -1) return next(new AppError('user not found', 404));
 
   const filteredBody = filterObj(req.body, 'name', 'email');
 
@@ -115,11 +108,7 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
 
   const index = client.users.findIndex((user) => user.id === req.params.userid);
 
-  if (index === -1)
-    return res.status(404).json({
-      status: 'fail',
-      message: 'user not found',
-    });
+  if (index === -1) return next(new AppError('user not found', 404));
 
   client.users.splice(index, 1);
 
