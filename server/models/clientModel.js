@@ -47,6 +47,9 @@ const clientSchema = new mongoose.Schema({
     default: false,
   },
   emailVerifyToken: String,
+  passwordResetToken: String,
+  passwordResetExpires: String,
+  passwordChangedAt: Date,
 });
 
 clientSchema.pre('save', async function (next) {
@@ -54,6 +57,14 @@ clientSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, 12);
 
   this.passwordConfirm = undefined;
+  next();
+});
+
+clientSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
+
+  this.passwordChangedAt = Date.now() - 1000;
+
   next();
 });
 
@@ -71,6 +82,19 @@ clientSchema.methods.isPasswordCorrect = async function (
   userPassword
 ) {
   return await bcrypt.compare(inputPassword, userPassword);
+};
+
+clientSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
 };
 
 module.exports = mongoose.model('Client', clientSchema);
