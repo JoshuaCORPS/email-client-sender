@@ -3,6 +3,7 @@ const User = require('../models/userModel');
 
 const filterObj = require('../util/filterObjBody');
 const catchAsync = require('../util/catchAsync');
+const AppError = require('../util/appError');
 
 // For All Clients
 exports.getAllClients = catchAsync(async (req, res, next) => {
@@ -20,11 +21,7 @@ exports.getAllClients = catchAsync(async (req, res, next) => {
 exports.getClient = catchAsync(async (req, res, next) => {
   const client = await Client.findById(req.params.clientid).select('-users');
 
-  if (!client)
-    return res.status(404).json({
-      status: 'fail',
-      message: 'user not found',
-    });
+  if (!client) return next(new AppError('client not found', 404));
 
   res.status(200).json({
     status: 'success',
@@ -43,11 +40,7 @@ exports.updateClient = catchAsync(async (req, res, next) => {
     { new: true, runValidators: true }
   );
 
-  if (!client)
-    return res.status(404).json({
-      status: 'fail',
-      message: 'client not found',
-    });
+  if (!client) return next(new AppError('client not found', 404));
 
   res.status(200).json({
     status: 'success',
@@ -62,11 +55,7 @@ exports.deleteClient = catchAsync(async (req, res, next) => {
     active: false,
   });
 
-  if (!client)
-    return res.status(404).json({
-      status: 'fail',
-      message: 'client not found',
-    });
+  if (!client) return next(new AppError('client not found', 404));
 
   res.status(204).json({
     status: 'success',
@@ -90,11 +79,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 exports.getUser = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.params.userid).select('-client');
 
-  if (!user)
-    return res.status(404).json({
-      status: 'fail',
-      message: 'user not found',
-    });
+  if (!user) return next(new AppError('user not found', 404));
 
   res.status(200).json({
     status: 'success',
@@ -112,11 +97,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
     runValidators: true,
   });
 
-  if (!user)
-    return res.status(404).json({
-      status: 'fail',
-      message: 'user not found',
-    });
+  if (!user) return next(new AppError('user not found', 404));
 
   res.status(200).json({
     status: 'success',
@@ -129,11 +110,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 exports.deleteUser = catchAsync(async (req, res, next) => {
   const user = await User.findByIdAndDelete(req.params.userid);
 
-  if (!user)
-    return res.status(404).json({
-      status: 'fail',
-      message: 'user not found',
-    });
+  if (!user) return next(new AppError('user not found', 404));
 
   res.status(204).json({
     status: 'success',
