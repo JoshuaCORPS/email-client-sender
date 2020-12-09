@@ -1,4 +1,12 @@
 const mongoose = require('mongoose');
+
+// catching sync codes exception
+process.on('uncaughtException', (err) => {
+  console.log('UNCAUGHT EXCEPTION! Shutting down...');
+  console.log(err.name, err.message);
+  process.exit(1);
+});
+
 require('dotenv').config();
 const app = require('./app');
 
@@ -16,6 +24,15 @@ mongoose
   })
   .then(() => console.log('connected to DB'));
 
-app.listen(process.env.PORT, () =>
+const server = app.listen(process.env.PORT, () =>
   console.log(`Server is running at port ${process.env.PORT}`)
 );
+
+// catching async codes rejection
+process.on('unhandledRejection', (err) => {
+  console.log('UNHANDLED REJECTION! Shutting down...');
+  console.log(err.name, err.message);
+  server.close(() => {
+    process.exit(1);
+  });
+});
