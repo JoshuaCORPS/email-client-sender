@@ -182,3 +182,104 @@ exports.verifyEmail = async (req, res) => {
     });
   }
 };
+
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email)
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Please provide your email to reset your password',
+      });
+
+    const client = await Client.findOne({ email });
+
+    if (!client)
+      return res.status(404).json({
+        status: 'fail',
+        message: 'client not found',
+      });
+
+    const resetToken = client.createPasswordResetToken();
+    await client.save({ validateBeforeSave: false });
+
+    const resetURL = `${req.protocol}://${req.get(
+      'host'
+    )}/api/v1/auth/reset-password/${resetToken}`;
+
+    const message = `Hi ${client.name}.\n\nForgot your password? To reset your password, go to this link: ${resetURL}.`;
+
+    try {
+      await sendEmail({
+        from: 'Sender support@sender.com',
+        email,
+        subject: 'Your password reset token (valid for only 10 minutes)',
+        message,
+      });
+    } catch (error) {
+      client.passwordResetToken = undefined;
+      client.passwordResetExpires = undefined;
+
+      await client.save({ validateBeforeSave: false });
+
+      res.status(500).json({
+        status: 'error',
+        message:
+          'There was an error sending the email. Please try again later!',
+      });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Token sent to mail',
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { password, passwordConfirm } = req.body;
+
+    if (!password || !passwordConfirm)
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Please provide your password to proceed',
+      });
+
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(req.params.token)
+      .digest('hex');
+
+    const client = await Client.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetExpires: { $gt: Date.now() },
+    });
+
+    if (!client)
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Token is invalid or has expired',
+      });
+
+    client.password = password;
+    client.passwordConfirm = passwordConfirm;
+    client.passwordResetToken = undefined;
+    client.passwordResetExpires = undefined;
+
+    await client.save();
+
+    createSendCookieTokenResponse(client, 200, res, req);
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message,
+    });
+  }
+};
