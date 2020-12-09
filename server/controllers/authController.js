@@ -6,6 +6,7 @@ const Client = require('../models/clientModel');
 
 const sendEmail = require('../util/email');
 const catchAsync = require('../util/catchAsync');
+const AppError = require('../util/appError');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -70,10 +71,9 @@ exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password)
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Please provide your email and password to proceed',
-    });
+    return next(
+      new AppError('Please provide your email and password to proceed', 400)
+    );
 
   const client = await Client.findOne({
     email,
@@ -101,11 +101,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     token = req.cookies.jwt;
   }
 
-  if (!token)
-    return res.status(401).json({
-      status: 'fail',
-      message: 'Please login to continue',
-    });
+  if (!token) return next(new AppError('Please login to continue', 401));
 
   const clientToken = await promisify(jwt.verify)(
     token,
@@ -114,11 +110,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   const client = await Client.findById(clientToken.id);
 
-  if (!client)
-    return res.status(404).json({
-      status: 'fail',
-      message: 'User no longer exist',
-    });
+  if (!client) return next(new AppError('User no longer exist', 404));
 
   req.client = client;
   next();
@@ -127,10 +119,9 @@ exports.protect = catchAsync(async (req, res, next) => {
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.client.role)) {
-      return res.status(403).json({
-        status: 'fail',
-        message: 'You do not have permission to perform this action',
-      });
+      return next(
+        new AppError('You do not have permission to perform this action', 403)
+      );
     }
     next();
   };
@@ -147,11 +138,7 @@ exports.verifyEmail = catchAsync(async (req, res, next) => {
     active: false,
   });
 
-  if (!client)
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Invalid token',
-    });
+  if (!client) return next(new AppError('Invalid token', 400));
 
   client.active = true;
   client.emailVerifyToken = undefined;
@@ -168,18 +155,13 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const { email } = req.body;
 
   if (!email)
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Please provide your email to reset your password',
-    });
+    return next(
+      new AppError('Please provide your email to reset your password', 400)
+    );
 
   const client = await Client.findOne({ email, active: { $ne: false } });
 
-  if (!client)
-    return res.status(404).json({
-      status: 'fail',
-      message: 'client not found',
-    });
+  if (!client) return next(new AppError('client not found', 404));
 
   const resetToken = client.createPasswordResetToken();
   await client.save({ validateBeforeSave: false });
@@ -203,10 +185,12 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
     await client.save({ validateBeforeSave: false });
 
-    res.status(500).json({
-      status: 'error',
-      message: 'There was an error sending the email. Please try again later!',
-    });
+    return next(
+      new AppError(
+        'There was an error sending the email. Please try again later!',
+        500
+      )
+    );
   }
 
   res.status(200).json({
@@ -219,10 +203,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   const { password, passwordConfirm } = req.body;
 
   if (!password || !passwordConfirm)
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Please provide your password to proceed',
-    });
+    return next(new AppError('Please provide your password to proceed', 400));
 
   const hashedToken = crypto
     .createHash('sha256')
@@ -235,10 +216,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   });
 
   if (!client)
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Token is invalid or has expired',
-    });
+    return next(new AppError('Token is invalid or has expired', 400));
 
   client.password = password;
   client.passwordConfirm = passwordConfirm;
