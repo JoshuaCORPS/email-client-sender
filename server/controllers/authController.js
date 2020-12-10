@@ -89,6 +89,17 @@ exports.login = catchAsync(async (req, res, next) => {
   createSendCookieTokenResponse(client, 200, res, req);
 });
 
+exports.logout = (req, res) => {
+  res.cookie('jwt', '', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+
+  res.status(200).json({
+    status: 'Success',
+  });
+};
+
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
 
