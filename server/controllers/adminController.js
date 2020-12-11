@@ -7,7 +7,10 @@ const AppError = require('../util/appError');
 
 // For All Clients
 exports.getAllClients = catchAsync(async (req, res, next) => {
-  const clients = await Client.find({ role: 'client' }).select('-users');
+  const clients = await Client.find({
+    role: 'client',
+    active: { $ne: false },
+  }).select('-users');
 
   res.status(200).json({
     status: 'success',
