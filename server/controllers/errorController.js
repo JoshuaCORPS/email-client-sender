@@ -7,7 +7,7 @@ const handleCastErrorDB = (err) => {
 };
 
 const handleDuplicateDataErrorDB = () => {
-  const message = 'Email already exist. Please use another value';
+  const message = 'Email already exist.';
 
   return new AppError(message, 400);
 };
