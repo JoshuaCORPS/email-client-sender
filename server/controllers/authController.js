@@ -67,7 +67,7 @@ exports.register = catchAsync(async (req, res, next) => {
   res.status(201).json({
     status: 'success',
     message:
-      'Register successful.\nPlease check your email, to verify your account!',
+      'Register successful.\nPlease check your email to verify your account!',
   });
 });
 
