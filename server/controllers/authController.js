@@ -43,7 +43,7 @@ exports.register = catchAsync(async (req, res, next) => {
     .update(verifyToken)
     .digest('hex');
 
-  const client = await Client.create({
+  await Client.create({
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
@@ -64,7 +64,11 @@ exports.register = catchAsync(async (req, res, next) => {
     message,
   });
 
-  createSendCookieTokenResponse(client, 201, res, req);
+  res.status(201).json({
+    status: 'success',
+    message:
+      'Register successful.\nPlease check your email, to verify your account!',
+  });
 });
 
 exports.login = catchAsync(async (req, res, next) => {
