@@ -24,7 +24,7 @@ app.enable('trust proxy');
 
 app.use(
   cors({
-    origin: 'https://e-sender.vercel.app',
+    origin: 'http://localhost:3000',
     methods: ['POST', 'PATCH', 'DELETE', 'GET', 'OPTIONS', 'HEAD'],
     credentials: true,
   })
