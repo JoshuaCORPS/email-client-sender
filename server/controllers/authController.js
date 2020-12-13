@@ -19,6 +19,7 @@ const createSendCookieTokenResponse = (client, statusCode, res, req) => {
 
   const cookieOption = {
     domain: '.herokuapp.com',
+    path: '/',
     httpOnly: true,
     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
