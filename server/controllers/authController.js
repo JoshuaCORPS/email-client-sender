@@ -18,7 +18,7 @@ const createSendCookieTokenResponse = (client, statusCode, res, req) => {
   const token = signToken(client._id);
 
   const cookieOption = {
-    domain: 'localhost',
+    domain: '.vercel.app',
     path: '/',
     httpOnly: true,
     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
