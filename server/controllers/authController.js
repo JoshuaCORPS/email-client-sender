@@ -18,6 +18,7 @@ const createSendCookieTokenResponse = (client, statusCode, res, req) => {
   const token = signToken(client._id);
 
   const cookieOption = {
+    domain: 'localhost',
     httpOnly: true,
     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
