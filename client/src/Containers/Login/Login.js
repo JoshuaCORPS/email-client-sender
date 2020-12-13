@@ -11,6 +11,7 @@ const { Title } = Typography;
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const inputChange = (e, name) => {
     if (name === "email") setEmail(e.target.value);
@@ -19,6 +20,7 @@ const Login = () => {
 
   const submitFormData = async () => {
     try {
+      setLoading(true);
       const loginClient = await axios.post(
         "/api/v1/auth/login",
         {
@@ -34,11 +36,13 @@ const Login = () => {
           <Alert message="Success" type="success" showIcon />,
           document.getElementById("alert")
         );
+      setLoading(false);
     } catch (error) {
       ReactDOM.render(
         <Alert message={error.response.data.message} type="error" showIcon />,
         document.getElementById("alert")
       );
+      setLoading(false);
     }
   };
   return (
@@ -80,7 +84,7 @@ const Login = () => {
         <div id="alert" style={{ marginBottom: "30px" }}></div>
 
         {/* For Button Login */}
-        <Button type="primary" htmlType="submit" block>
+        <Button type="primary" htmlType="submit" block loading={loading}>
           Log in
         </Button>
 

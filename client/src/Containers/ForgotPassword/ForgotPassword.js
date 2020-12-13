@@ -9,6 +9,7 @@ const { Title } = Typography;
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const inputChange = (e, name) => {
     if (name === "email") setEmail(e.target.value);
@@ -16,6 +17,7 @@ const ForgotPassword = () => {
 
   const submitFormData = async () => {
     try {
+      setLoading(true);
       const searchClient = await axios.post("/api/v1/auth/forgot-password", {
         email,
       });
@@ -29,11 +31,13 @@ const ForgotPassword = () => {
           />,
           document.getElementById("alert")
         );
+      setLoading(false);
     } catch (error) {
       ReactDOM.render(
         <Alert message={error.response.data.message} type="error" showIcon />,
         document.getElementById("alert")
       );
+      setLoading(false);
     }
   };
   return (
@@ -61,7 +65,7 @@ const ForgotPassword = () => {
         <div id="alert" style={{ marginBottom: "30px" }}></div>
 
         {/* For Button Login */}
-        <Button type="primary" htmlType="submit" block>
+        <Button type="primary" htmlType="submit" block loading={loading}>
           Search
         </Button>
       </Form>
