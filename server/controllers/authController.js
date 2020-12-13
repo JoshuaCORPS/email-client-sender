@@ -185,7 +185,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     'host'
   )}/api/v1/auth/reset-password/${resetToken}`;
 
-  const message = `Hi ${client.name}.\n\nForgot your password? To reset your password, go to this link: ${resetURL}.`;
+  const message = `Hi ${client.name}.\n\nForgot your password? To reset your password, go to this link: ${resetURL}`;
 
   try {
     await sendEmail({
@@ -241,4 +241,22 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   await client.save();
 
   createSendCookieTokenResponse(client, 200, res, req);
+});
+
+exports.verifyResetToken = catchAsync(async (req, res, next) => {
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
+
+  const client = await Client.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: Date.now() },
+  });
+
+  if (!client) return next(new AppError('Invalid token', 400));
+
+  res.status(200).json({
+    status: 'success',
+  });
 });
