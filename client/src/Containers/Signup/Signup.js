@@ -12,6 +12,7 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const inputChange = (e, name) => {
     if (name === "name") setName(e.target.value);
@@ -25,6 +26,7 @@ const Signup = () => {
 
   const submitFormData = async () => {
     try {
+      setLoading(true);
       const registerClient = await axios.post("/api/v1/auth/register", {
         name,
         email,
@@ -41,11 +43,13 @@ const Signup = () => {
           />,
           document.getElementById("alert")
         );
+      setLoading(false);
     } catch (error) {
       ReactDOM.render(
         <Alert message={error.response.data.message} type="error" showIcon />,
         document.getElementById("alert")
       );
+      setLoading(false);
     }
   };
   return (
@@ -85,7 +89,10 @@ const Signup = () => {
         {/* For password */}
         <Form.Item
           name="password"
-          rules={[{ required: true, message: "Please input your Password!" }]}
+          rules={[
+            { required: true, message: "Please input your Password!" },
+            { min: 8, message: "Password must have at least 8 characters" },
+          ]}
         >
           <Input.Password
             onChange={(e) => inputChange(e, "password")}
@@ -126,7 +133,7 @@ const Signup = () => {
         <div id="alert" style={{ marginBottom: "30px" }}></div>
 
         {/* Sign up button */}
-        <Button type="primary" htmlType="submit" block>
+        <Button type="primary" htmlType="submit" block loading={loading}>
           Sign up
         </Button>
       </Form>
