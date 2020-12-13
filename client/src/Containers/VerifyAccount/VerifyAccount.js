@@ -7,8 +7,6 @@ import { Alert, Row } from "antd";
 import classes from "./VerifyAccount.module.css";
 
 const VerifyAccount = (props) => {
-  console.log(props.match.params.token);
-
   useEffect(() => {
     try {
       const verifyToken = async () => {
@@ -50,7 +48,7 @@ const VerifyAccount = (props) => {
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [props.match.params.token]);
 
   return (
     <Row justify="center" align="middle" className={classes.RowVH}>

@@ -69,7 +69,7 @@ const ResetPassword = (props) => {
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [props.match.params.token]);
 
   let body = <Spinner />;
   if (isTokenVerified)
