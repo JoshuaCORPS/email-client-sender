@@ -20,11 +20,21 @@ const AppError = require('./util/appError');
 
 const app = express();
 
+const allowedOrigins = ['https://e-sender.vercel.app', 'http://localhost:3000'];
+
 app.enable('trust proxy');
 
 app.use(
   cors({
-    origin: 'https://e-sender.vercel.app',
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const message = `This site ${origin} doesn't have a permission to access this site.`;
+        return callback(new Error(message), false);
+      }
+      return callback(null, true);
+    },
     methods: ['POST', 'PATCH', 'DELETE', 'GET', 'OPTIONS', 'HEAD'],
     credentials: true,
   })
