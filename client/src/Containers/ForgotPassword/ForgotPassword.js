@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
+import { useForm } from "../../hooks/useForm";
 import { Form, Input, Button, Row, Typography, Alert } from "antd";
 import { MailOutlined } from "@ant-design/icons";
 import classes from "./ForgotPassword.module.css";
@@ -8,19 +9,18 @@ import classes from "./ForgotPassword.module.css";
 const { Title } = Typography;
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
+  const [values, handleChange] = useForm({ email: "" });
   const [loading, setLoading] = useState(false);
-
-  const inputChange = (e, name) => {
-    if (name === "email") setEmail(e.target.value);
-  };
 
   const submitFormData = async () => {
     try {
       setLoading(true);
-      const searchClient = await axios.post("/api/v1/auth/forgot-password", {
-        email,
-      });
+
+      const searchClient = await axios.post(
+        "/api/v1/auth/forgot-password",
+        values
+      );
+
       if (searchClient.data.status === "success")
         ReactDOM.render(
           <Alert
@@ -31,12 +31,18 @@ const ForgotPassword = () => {
           />,
           document.getElementById("alert")
         );
+
       setLoading(false);
+
+      setTimeout(() => {
+        window.location.assign("/login");
+      }, 2000);
     } catch (error) {
       ReactDOM.render(
         <Alert message={error.response.data.message} type="error" showIcon />,
         document.getElementById("alert")
       );
+
       setLoading(false);
     }
   };
@@ -47,14 +53,16 @@ const ForgotPassword = () => {
 
         {/* For Email */}
         <Form.Item
-          name="email"
+          name="itemEmail"
           rules={[
             { required: true, message: "Please input your Email!" },
-            { type: "email" },
+            { type: "email", message: "Please input a valid Email!" },
           ]}
         >
           <Input
-            onChange={(e) => inputChange(e, "email")}
+            name="email"
+            value={values.email}
+            onChange={handleChange}
             size="large"
             prefix={<MailOutlined className="site-form-item-icon" />}
             placeholder="Email"
