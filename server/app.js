@@ -10,6 +10,7 @@ const xss = require('xss-clean');
 
 const compression = require('compression');
 
+const viewRouter = require('./routes/authRoutes');
 const authRouter = require('./routes/authRoutes');
 const clientRouter = require('./routes/clientRoutes');
 const adminRouter = require('./routes/adminRoutes');
@@ -59,6 +60,7 @@ app.use(xss());
 
 app.use(compression());
 
+app.use('/api/v1/view', viewRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/clients', clientRouter);
 app.use('/api/v1/admin', adminRouter);
