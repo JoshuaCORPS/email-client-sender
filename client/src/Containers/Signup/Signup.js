@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
+import { useForm } from "../../hooks/useForm";
 import { Form, Input, Button, Row, Typography, Alert } from "antd";
 import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import classes from "./Signup.module.css";
@@ -8,31 +9,20 @@ import classes from "./Signup.module.css";
 const { Title } = Typography;
 
 const Signup = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [values, handleChange] = useForm({
+    name: "",
+    email: "",
+    password: "",
+    passwordConfirm: "",
+  });
   const [loading, setLoading] = useState(false);
-
-  const inputChange = (e, name) => {
-    if (name === "name") setName(e.target.value);
-
-    if (name === "email") setEmail(e.target.value);
-
-    if (name === "password") setPassword(e.target.value);
-
-    if (name === "passwordConfirm") setPasswordConfirm(e.target.value);
-  };
 
   const submitFormData = async () => {
     try {
       setLoading(true);
-      const registerClient = await axios.post("/api/v1/auth/register", {
-        name,
-        email,
-        password,
-        passwordConfirm,
-      });
+
+      const registerClient = await axios.post("/api/v1/auth/register", values);
+
       if (registerClient.data.status === "success")
         ReactDOM.render(
           <Alert
@@ -43,12 +33,18 @@ const Signup = () => {
           />,
           document.getElementById("alert")
         );
+
       setLoading(false);
+
+      setTimeout(() => {
+        window.location.assign("/login");
+      }, 2000);
     } catch (error) {
       ReactDOM.render(
         <Alert message={error.response.data.message} type="error" showIcon />,
         document.getElementById("alert")
       );
+
       setLoading(false);
     }
   };
@@ -59,11 +55,13 @@ const Signup = () => {
 
         {/* For Name */}
         <Form.Item
-          name="name"
+          name="itemName"
           rules={[{ required: true, message: "Please input your Name!" }]}
         >
           <Input
-            onChange={(e) => inputChange(e, "name")}
+            name="name"
+            value={values.name}
+            onChange={handleChange}
             size="large"
             prefix={<UserOutlined />}
             placeholder="Full Name"
@@ -72,14 +70,16 @@ const Signup = () => {
 
         {/* For Email */}
         <Form.Item
-          name="email"
+          name="itemEmail"
           rules={[
             { required: true, message: "Please input your Email!" },
-            { type: "email" },
+            { type: "email", message: "Please input a valid Email!" },
           ]}
         >
           <Input
-            onChange={(e) => inputChange(e, "email")}
+            name="email"
+            value={values.email}
+            onChange={handleChange}
             size="large"
             prefix={<MailOutlined />}
             placeholder="Email"
@@ -88,14 +88,16 @@ const Signup = () => {
 
         {/* For password */}
         <Form.Item
-          name="password"
+          name="itemPassword"
           rules={[
             { required: true, message: "Please input your Password!" },
-            { min: 8, message: "Password must have at least 8 characters" },
+            { min: 8, message: "Password must have at least 8 characters!" },
           ]}
         >
           <Input.Password
-            onChange={(e) => inputChange(e, "password")}
+            name="password"
+            value={values.password}
+            onChange={handleChange}
             prefix={<LockOutlined />}
             size="large"
             type="password"
@@ -105,14 +107,14 @@ const Signup = () => {
 
         {/* For Password Confirm */}
         <Form.Item
-          name="passwordConfirm"
-          dependencies={["password"]}
+          name="itemPasswordConfirm"
+          dependencies={["itemPassword"]}
           hasFeedback
           rules={[
             { required: true, message: "Please confirm your Password!" },
             ({ getFieldValue }) => ({
               validator(_, value) {
-                if (!value || getFieldValue("password") === value)
+                if (!value || getFieldValue("itemPassword") === value)
                   return Promise.resolve();
 
                 return Promise.reject("Password don't match!");
@@ -121,11 +123,13 @@ const Signup = () => {
           ]}
         >
           <Input.Password
-            onChange={(e) => inputChange(e, "passwordConfirm")}
+            name="passwordConfirm"
+            value={values.passwordConfirm}
+            onChange={handleChange}
             prefix={<LockOutlined />}
             size="large"
             type="password"
-            placeholder="Confirm Your password"
+            placeholder="Confirm Your password!"
           />
         </Form.Item>
 
