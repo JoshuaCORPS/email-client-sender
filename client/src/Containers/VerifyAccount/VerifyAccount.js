@@ -25,6 +25,7 @@ const VerifyAccount = (props) => {
               />,
               document.getElementById("alert")
             );
+
             setTimeout(() => {
               window.location.assign("/login");
             }, 2000);
@@ -39,11 +40,13 @@ const VerifyAccount = (props) => {
             />,
             document.getElementById("alert")
           );
+
           setTimeout(() => {
             window.location.assign("/signup");
           }, 2000);
         }
       };
+
       verifyToken();
     } catch (error) {
       console.log(error);
