@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import { Link } from "react-router-dom";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import { useForm } from "../../hooks/useForm";
 import { Form, Input, Button, Row, Typography, Alert } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import classes from "./Login.module.css";
@@ -9,39 +10,30 @@ import classes from "./Login.module.css";
 const { Title } = Typography;
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [values, handleChange] = useForm({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
-
-  const inputChange = (e, name) => {
-    if (name === "email") setEmail(e.target.value);
-    if (name === "password") setPassword(e.target.value);
-  };
 
   const submitFormData = async () => {
     try {
       setLoading(true);
-      const loginClient = await axios.post(
-        "/api/v1/auth/login",
-        {
-          email,
-          password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+
+      const loginClient = await axios.post("/api/v1/auth/login", values, {
+        withCredentials: true,
+      });
+
       if (loginClient.data.status === "success")
         ReactDOM.render(
           <Alert message="Success" type="success" showIcon />,
           document.getElementById("alert")
         );
+
       setLoading(false);
     } catch (error) {
       ReactDOM.render(
         <Alert message={error.response.data.message} type="error" showIcon />,
         document.getElementById("alert")
       );
+
       setLoading(false);
     }
   };
@@ -52,14 +44,16 @@ const Login = () => {
 
         {/* For Email */}
         <Form.Item
-          name="email"
+          name="itemEmail"
           rules={[
             { required: true, message: "Please input your Email!" },
-            { type: "email" },
+            { type: "email", message: "Please input a valid Email!" },
           ]}
         >
           <Input
-            onChange={(e) => inputChange(e, "email")}
+            name="email"
+            value={values.email}
+            onChange={handleChange}
             size="large"
             prefix={<MailOutlined className="site-form-item-icon" />}
             placeholder="Email"
@@ -68,11 +62,13 @@ const Login = () => {
 
         {/* For Password */}
         <Form.Item
-          name="password"
+          name="itemPassword"
           rules={[{ required: true, message: "Please input your Password!" }]}
         >
           <Input.Password
-            onChange={(e) => inputChange(e, "password")}
+            name="password"
+            value={values.password}
+            onChange={handleChange}
             prefix={<LockOutlined className="site-form-item-icon" />}
             size="large"
             type="password"
@@ -91,7 +87,7 @@ const Login = () => {
         {/* For Signup Link */}
         <Row justify="center">
           <Form.Item>
-            <Link to="/signup">Register</Link>
+            <Link to="/signup">Sign up</Link>
           </Form.Item>
         </Row>
 
