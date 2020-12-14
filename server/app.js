@@ -10,7 +10,7 @@ const xss = require('xss-clean');
 
 const compression = require('compression');
 
-const viewRouter = require('./routes/authRoutes');
+const viewRouter = require('./routes/viewRoutes');
 const authRouter = require('./routes/authRoutes');
 const clientRouter = require('./routes/clientRoutes');
 const adminRouter = require('./routes/adminRoutes');
