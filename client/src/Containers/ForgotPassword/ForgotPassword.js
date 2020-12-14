@@ -56,7 +56,7 @@ const ForgotPassword = () => {
         <InputEmail value={values.email} handleChange={handleChange} />
 
         {/* For Alert */}
-        <div id="alert" style={{ marginBottom: "30px" }}></div>
+        <div id="alert" className={classes.AlertMargin}></div>
 
         {/* For Button Login */}
         <Button type="primary" htmlType="submit" block loading={loading}>

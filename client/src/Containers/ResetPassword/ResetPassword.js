@@ -86,7 +86,7 @@ const ResetPassword = (props) => {
           />
 
           {/* For Alert */}
-          <div id="alert" style={{ marginBottom: "30px" }}></div>
+          <div id="alert" className={classes.AlertMargin}></div>
 
           {/* Sign up button */}
           <Button type="primary" htmlType="submit" block loading={loading}>
