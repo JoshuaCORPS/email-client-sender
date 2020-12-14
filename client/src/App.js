@@ -6,6 +6,7 @@ import Signup from "./Containers/Signup/Signup";
 import ForgotPassword from "./Containers/ForgotPassword/ForgotPassword";
 import ResetPassword from "./Containers/ResetPassword/ResetPassword";
 import VerifyAccount from "./Containers/VerifyAccount/VerifyAccount";
+import Dashboard from "./Components/Dashboard/Dashboard";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/forgot-password" component={ForgotPassword} />
+        <Route path="/" component={Dashboard} />
       </Switch>
     </main>
   );
