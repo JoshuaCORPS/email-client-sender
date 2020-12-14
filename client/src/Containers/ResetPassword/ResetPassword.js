@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
+import { useForm } from "../../hooks/useForm";
 import { withRouter } from "react-router-dom";
 import { LockOutlined } from "@ant-design/icons";
 import { Form, Input, Button, Row, Typography, Alert } from "antd";
@@ -12,34 +13,28 @@ import classes from "./ResetPassword.module.css";
 const { Title } = Typography;
 
 const ResetPassword = (props) => {
-  const [password, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [values, handleChange] = useForm({ password: "", passwordConfirm: "" });
   const [isTokenVerified, setIsTokenVerified] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const inputChange = (e, name) => {
-    if (name === "password") setPassword(e.target.value);
-
-    if (name === "passwordConfirm") setPasswordConfirm(e.target.value);
-  };
 
   const submitFormData = async () => {
     try {
       setLoading(true);
+
       const searchClient = await axios.post(
         `/api/v1/auth/reset-password/${props.match.params.token}`,
-        {
-          password,
-          passwordConfirm,
-        }
+        values
       );
+
       if (searchClient.data.status === "success")
         ReactDOM.render(
           <Alert message="Success" type="success" showIcon />,
           document.getElementById("alert")
         );
+
+      setLoading(false);
+
       window.setTimeout(() => {
-        setLoading(false);
         window.location.assign("/login");
       }, 2000);
     } catch (error) {
@@ -47,6 +42,7 @@ const ResetPassword = (props) => {
         <Alert message={error.response.data.message} type="error" showIcon />,
         document.getElementById("alert")
       );
+
       setLoading(false);
     }
   };
@@ -71,23 +67,26 @@ const ResetPassword = (props) => {
     }
   }, [props.match.params.token]);
 
-  let body = <Spinner />;
+  let content = <Spinner />;
+
   if (isTokenVerified)
-    body = (
+    content = (
       <Row align="middle" justify="center" className={classes.RowVH}>
         <Form className={classes.FormSize} onFinish={submitFormData}>
           <Title level={3}>Reset Password</Title>
 
           {/* For password */}
           <Form.Item
-            name="password"
+            name="itemPassword"
             rules={[
               { required: true, message: "Please input your Password!" },
-              { min: 8, message: "Password must have at least 8 characters" },
+              { min: 8, message: "Password must have at least 8 characters!" },
             ]}
           >
             <Input.Password
-              onChange={(e) => inputChange(e, "password")}
+              name="password"
+              value={values.password}
+              onChange={handleChange}
               prefix={<LockOutlined />}
               size="large"
               type="password"
@@ -97,14 +96,14 @@ const ResetPassword = (props) => {
 
           {/* For Password Confirm */}
           <Form.Item
-            name="passwordConfirm"
-            dependencies={["password"]}
+            name="itemPasswordConfirm"
+            dependencies={["itemPassword"]}
             hasFeedback
             rules={[
               { required: true, message: "Please confirm your Password!" },
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (!value || getFieldValue("password") === value)
+                  if (!value || getFieldValue("itemPassword") === value)
                     return Promise.resolve();
 
                   return Promise.reject("Password don't match!");
@@ -113,7 +112,9 @@ const ResetPassword = (props) => {
             ]}
           >
             <Input.Password
-              onChange={(e) => inputChange(e, "passwordConfirm")}
+              name="passwordConfirm"
+              value={values.passwordConfirm}
+              onChange={handleChange}
               prefix={<LockOutlined />}
               size="large"
               type="password"
@@ -132,7 +133,7 @@ const ResetPassword = (props) => {
       </Row>
     );
 
-  return <>{body}</>;
+  return <>{content}</>;
 };
 
 export default withRouter(ResetPassword);
