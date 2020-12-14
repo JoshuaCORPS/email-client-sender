@@ -3,8 +3,10 @@ import ReactDOM from "react-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useForm } from "../../hooks/useForm";
-import { Form, Input, Button, Row, Typography, Alert } from "antd";
-import { LockOutlined, MailOutlined } from "@ant-design/icons";
+import { Form, Button, Row, Typography, Alert } from "antd";
+
+import InputEmail from "../../Components/Form/InputEmail/InputEmail";
+import InputPassword from "../../Components/Form/InputPassword/InputPassword";
 import classes from "./Login.module.css";
 
 const { Title } = Typography;
@@ -43,41 +45,13 @@ const Login = () => {
         <Title level={3}>Log in</Title>
 
         {/* For Email */}
-        <Form.Item
-          name="itemEmail"
-          rules={[
-            { required: true, message: "Please input your Email!" },
-            { type: "email", message: "Please input a valid Email!" },
-          ]}
-        >
-          <Input
-            name="email"
-            value={values.email}
-            onChange={handleChange}
-            size="large"
-            prefix={<MailOutlined className="site-form-item-icon" />}
-            placeholder="Email"
-          />
-        </Form.Item>
+        <InputEmail value={values.email} handleChange={handleChange} />
 
         {/* For Password */}
-        <Form.Item
-          name="itemPassword"
-          rules={[{ required: true, message: "Please input your Password!" }]}
-        >
-          <Input.Password
-            name="password"
-            value={values.password}
-            onChange={handleChange}
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            size="large"
-            type="password"
-            placeholder="Password"
-          />
-        </Form.Item>
+        <InputPassword value={values.password} handleChange={handleChange} />
 
         {/* For Alert */}
-        <div id="alert" style={{ marginBottom: "30px" }}></div>
+        <div id="alert" className={classes.AlertMargin}></div>
 
         {/* For Button Login */}
         <Button type="primary" htmlType="submit" block loading={loading}>

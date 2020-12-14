@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
 import { useForm } from "../../hooks/useForm";
-import { Form, Input, Button, Row, Typography, Alert } from "antd";
-import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
+import { Form, Button, Row, Typography, Alert } from "antd";
+
+import InputName from "../../Components/Form/InputName/InputName";
+import InputEmail from "../../Components/Form/InputEmail/InputEmail";
+import InputPassword from "../../Components/Form/InputPassword/InputPassword";
+import InputPasswordConfirm from "../../Components/Form/InputPasswordConfirm/InputPasswordConfirm";
 import classes from "./Signup.module.css";
 
 const { Title } = Typography;
@@ -54,84 +58,19 @@ const Signup = () => {
         <Title level={3}>Sign up</Title>
 
         {/* For Name */}
-        <Form.Item
-          name="itemName"
-          rules={[{ required: true, message: "Please input your Name!" }]}
-        >
-          <Input
-            name="name"
-            value={values.name}
-            onChange={handleChange}
-            size="large"
-            prefix={<UserOutlined />}
-            placeholder="Full Name"
-          />
-        </Form.Item>
+        <InputName value={values.name} handleChange={handleChange} />
 
         {/* For Email */}
-        <Form.Item
-          name="itemEmail"
-          rules={[
-            { required: true, message: "Please input your Email!" },
-            { type: "email", message: "Please input a valid Email!" },
-          ]}
-        >
-          <Input
-            name="email"
-            value={values.email}
-            onChange={handleChange}
-            size="large"
-            prefix={<MailOutlined />}
-            placeholder="Email"
-          />
-        </Form.Item>
+        <InputEmail value={values.email} handleChange={handleChange} />
 
         {/* For password */}
-        <Form.Item
-          name="itemPassword"
-          rules={[
-            { required: true, message: "Please input your Password!" },
-            { min: 8, message: "Password must have at least 8 characters!" },
-          ]}
-        >
-          <Input.Password
-            name="password"
-            value={values.password}
-            onChange={handleChange}
-            prefix={<LockOutlined />}
-            size="large"
-            type="password"
-            placeholder="Password"
-          />
-        </Form.Item>
+        <InputPassword value={values.password} handleChange={handleChange} />
 
         {/* For Password Confirm */}
-        <Form.Item
-          name="itemPasswordConfirm"
-          dependencies={["itemPassword"]}
-          hasFeedback
-          rules={[
-            { required: true, message: "Please confirm your Password!" },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("itemPassword") === value)
-                  return Promise.resolve();
-
-                return Promise.reject("Password don't match!");
-              },
-            }),
-          ]}
-        >
-          <Input.Password
-            name="passwordConfirm"
-            value={values.passwordConfirm}
-            onChange={handleChange}
-            prefix={<LockOutlined />}
-            size="large"
-            type="password"
-            placeholder="Confirm Your password!"
-          />
-        </Form.Item>
+        <InputPasswordConfirm
+          value={values.passwordConfirm}
+          handleChange={handleChange}
+        />
 
         {/* For Alert */}
         <div id="alert" style={{ marginBottom: "30px" }}></div>

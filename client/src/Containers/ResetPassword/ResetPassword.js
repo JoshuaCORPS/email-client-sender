@@ -3,9 +3,10 @@ import ReactDOM from "react-dom";
 import axios from "axios";
 import { useForm } from "../../hooks/useForm";
 import { withRouter } from "react-router-dom";
-import { LockOutlined } from "@ant-design/icons";
-import { Form, Input, Button, Row, Typography, Alert } from "antd";
+import { Form, Button, Row, Typography, Alert } from "antd";
 
+import InputPassword from "../../Components/Form/InputPassword/InputPassword";
+import InputPasswordConfirm from "../../Components/Form/InputPasswordConfirm/InputPasswordConfirm";
 import Spinner from "../../Components/Spinner/Spinner";
 
 import classes from "./ResetPassword.module.css";
@@ -76,51 +77,13 @@ const ResetPassword = (props) => {
           <Title level={3}>Reset Password</Title>
 
           {/* For password */}
-          <Form.Item
-            name="itemPassword"
-            rules={[
-              { required: true, message: "Please input your Password!" },
-              { min: 8, message: "Password must have at least 8 characters!" },
-            ]}
-          >
-            <Input.Password
-              name="password"
-              value={values.password}
-              onChange={handleChange}
-              prefix={<LockOutlined />}
-              size="large"
-              type="password"
-              placeholder="Password"
-            />
-          </Form.Item>
+          <InputPassword value={values.password} handleChange={handleChange} />
 
           {/* For Password Confirm */}
-          <Form.Item
-            name="itemPasswordConfirm"
-            dependencies={["itemPassword"]}
-            hasFeedback
-            rules={[
-              { required: true, message: "Please confirm your Password!" },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue("itemPassword") === value)
-                    return Promise.resolve();
-
-                  return Promise.reject("Password don't match!");
-                },
-              }),
-            ]}
-          >
-            <Input.Password
-              name="passwordConfirm"
-              value={values.passwordConfirm}
-              onChange={handleChange}
-              prefix={<LockOutlined />}
-              size="large"
-              type="password"
-              placeholder="Confirm Your password"
-            />
-          </Form.Item>
+          <InputPasswordConfirm
+            value={values.passwordConfirm}
+            handleChange={handleChange}
+          />
 
           {/* For Alert */}
           <div id="alert" style={{ marginBottom: "30px" }}></div>

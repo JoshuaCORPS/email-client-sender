@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
 import { useForm } from "../../hooks/useForm";
-import { Form, Input, Button, Row, Typography, Alert } from "antd";
-import { MailOutlined } from "@ant-design/icons";
+import { Form, Button, Row, Typography, Alert } from "antd";
+
+import InputEmail from "../../Components/Form/InputEmail/InputEmail";
 import classes from "./ForgotPassword.module.css";
 
 const { Title } = Typography;
@@ -52,22 +53,7 @@ const ForgotPassword = () => {
         <Title level={3}>Forgot Password</Title>
 
         {/* For Email */}
-        <Form.Item
-          name="itemEmail"
-          rules={[
-            { required: true, message: "Please input your Email!" },
-            { type: "email", message: "Please input a valid Email!" },
-          ]}
-        >
-          <Input
-            name="email"
-            value={values.email}
-            onChange={handleChange}
-            size="large"
-            prefix={<MailOutlined className="site-form-item-icon" />}
-            placeholder="Email"
-          />
-        </Form.Item>
+        <InputEmail value={values.email} handleChange={handleChange} />
 
         {/* For Alert */}
         <div id="alert" style={{ marginBottom: "30px" }}></div>
