@@ -30,6 +30,10 @@ const Login = () => {
         );
 
       setLoading(false);
+
+      setTimeout(() => {
+        window.location.assign("/");
+      }, 2000);
     } catch (error) {
       ReactDOM.render(
         <Alert message={error.response.data.message} type="error" showIcon />,
