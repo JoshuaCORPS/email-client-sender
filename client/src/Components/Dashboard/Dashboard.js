@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { withRouter } from "react-router-dom";
-import { Layout, Menu } from "antd";
+import { Layout, Menu, Row } from "antd";
 import {
   DashboardOutlined,
   MailOutlined,
   UsergroupAddOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import { Footer } from "antd/lib/layout/layout";
 
@@ -14,6 +15,20 @@ import Signup from "../../Containers/Signup/Signup";
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
+
+const logout = async () => {
+  try {
+    console.log("clicked");
+    const result = await axios.get("/api/v1/auth/logout");
+
+    if (result.data.status === "success")
+      setTimeout(() => {
+        window.location.assign("/login");
+      }, 2000);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const Dashboard = (props) => {
   const [link, setLink] = useState("/");
@@ -30,7 +45,6 @@ const Dashboard = (props) => {
             withCredentials: true,
           });
 
-          console.log(result.data.status);
           if (result.data.status === "success") setIsLoggedIn(true);
         } catch (error) {
           window.location.assign("/login");
@@ -83,6 +97,13 @@ const Dashboard = (props) => {
                 </Menu.Item>
                 <Menu.Item>Manage User</Menu.Item>
               </SubMenu>
+              <Menu.Item
+                icon={<LogoutOutlined />}
+                onClick={logout}
+                style={{ position: "absolute", bottom: "0" }}
+              >
+                Log out
+              </Menu.Item>
             </Menu>
           </Sider>
 
