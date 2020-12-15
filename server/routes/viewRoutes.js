@@ -1,10 +1,8 @@
 const express = require('express');
-const authController = require('../controllers/authController');
+const viewController = require('../controllers/viewController');
 
 const Router = express.Router();
 
-Router.get('/', authController.protect, (req, res) =>
-  res.status(200).json({ status: 'success' })
-);
+Router.get('/', viewController.checkTokenAndSearchClient);
 
 module.exports = Router;
