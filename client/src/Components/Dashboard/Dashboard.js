@@ -22,10 +22,14 @@ const logout = async () => {
   try {
     const result = await axios.get("/api/v1/auth/logout");
 
-    if (result.data.status === "success")
+    if (result.data.status === "success") {
+      Cookies.remove("name", { path: "" });
+      Cookies.remove("email", { path: "" });
+      Cookies.remove("role", { path: "" });
       setTimeout(() => {
         window.location.assign("/login");
       }, 2000);
+    }
   } catch (error) {
     console.log(error);
   }
