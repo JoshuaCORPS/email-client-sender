@@ -41,7 +41,6 @@ const Login = () => {
         window.location.assign("/");
       }, 2000);
     } catch (error) {
-      console.log(error.message);
       ReactDOM.render(
         <Alert message={error.response.data.message} type="error" showIcon />,
         document.getElementById("alert")
