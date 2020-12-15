@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
 import { useForm } from "../../hooks/useForm";
 import { Form, Button, Row, Typography, Alert } from "antd";
 
 import InputEmail from "../../Components/Form/InputEmail/InputEmail";
 import InputPassword from "../../Components/Form/InputPassword/InputPassword";
-import { encrypt } from "../../util/encrypt-decrypt";
 
 import classes from "./Login.module.css";
 
@@ -17,7 +15,6 @@ const { Title } = Typography;
 const Login = () => {
   const [values, handleChange] = useForm({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
-  console.log(process.env.REACT_APP_SECRET_KEY);
 
   const submitFormData = async () => {
     try {
@@ -32,9 +29,6 @@ const Login = () => {
           <Alert message="Success" type="success" showIcon />,
           document.getElementById("alert")
         );
-      Cookies.set("name", encrypt(loginClient.data.data.client.name));
-      Cookies.set("email", encrypt(loginClient.data.data.client.email));
-      Cookies.set("role", encrypt(loginClient.data.data.client.role));
       setLoading(false);
 
       setTimeout(() => {
