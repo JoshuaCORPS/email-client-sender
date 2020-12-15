@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Cookies from "js-cookie";
 import { withRouter } from "react-router-dom";
 import { Layout, Menu } from "antd";
 import {
@@ -12,13 +13,13 @@ import { Footer } from "antd/lib/layout/layout";
 
 import Spinner from "../../Components/Spinner/Spinner";
 import Signup from "../../Containers/Signup/Signup";
+import { decrypt } from "../../util/encrypt-decrypt";
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 
 const logout = async () => {
   try {
-    console.log("clicked");
     const result = await axios.get("/api/v1/auth/logout");
 
     if (result.data.status === "success")
@@ -33,6 +34,9 @@ const logout = async () => {
 const Dashboard = (props) => {
   const [link, setLink] = useState("/");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
 
   let content;
   let body = <Spinner />;
@@ -46,6 +50,9 @@ const Dashboard = (props) => {
           });
 
           if (result.data.status === "success") setIsLoggedIn(true);
+          if (Cookies.get("name")) setName(decrypt(Cookies.get("name")));
+          if (Cookies.get("email")) setEmail(decrypt(Cookies.get("email")));
+          if (Cookies.get("role")) setRole(decrypt(Cookies.get("role")));
         } catch (error) {
           window.location.assign("/login");
         }
@@ -63,11 +70,12 @@ const Dashboard = (props) => {
     body = (
       <Layout style={{ minHeight: "100vh" }}>
         {/* Header */}
+
         <Header>
           <Menu theme="dark" mode="horizontal">
-            {/* <Menu.Item key="1">nav 1</Menu.Item>
-          <Menu.Item key="2">nav 2</Menu.Item>
-          <Menu.Item key="3">nav 3</Menu.Item> */}
+            <Menu.Item key="1">{name}</Menu.Item>
+            <Menu.Item key="2">{email}</Menu.Item>
+            <Menu.Item key="3">{role}</Menu.Item>
           </Menu>
         </Header>
 
