@@ -15,7 +15,7 @@ import AddUser from "../../Containers/AddUser/AddUser";
 import MailUsers from "../../Containers/MailUsers/MailUsers";
 
 const { SubMenu } = Menu;
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
 
 const logout = async () => {
