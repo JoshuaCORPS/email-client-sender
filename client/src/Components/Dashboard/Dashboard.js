@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { withRouter } from "react-router-dom";
-import { Layout, Menu, Avatar, Divider, Row, Col, Typography } from "antd";
+import {
+  Layout,
+  Menu,
+  Avatar,
+  Divider,
+  Row,
+  Col,
+  Typography,
+  Image,
+} from "antd";
 import {
   DashboardOutlined,
   MailOutlined,
@@ -81,13 +90,11 @@ const Dashboard = (props) => {
         <Layout>
           <Sider breakpoint="lg" collapsedWidth="0">
             {/* Company Logo */}
-            <Row>
-              <img
-                src="https://www.nasa.gov/sites/default/files/thumbnails/image/nasa-logo-web-rgb.png"
-                alt="Company logo"
-                width="100%"
-              />
-            </Row>
+            <Image
+              src="https://www.nasa.gov/sites/default/files/thumbnails/image/nasa-logo-web-rgb.png"
+              alt="Company logo"
+              width="100%"
+            />
 
             {/* Divider */}
             <Divider style={{ backgroundColor: "#ccc", marginTop: "5px" }} />
