@@ -45,6 +45,10 @@ const ResetPassword = (props) => {
       );
 
       setLoading(false);
+
+      setTimeout(() => {
+        ReactDOM.render("", document.getElementById("alert"));
+      }, 3000);
     }
   };
 
