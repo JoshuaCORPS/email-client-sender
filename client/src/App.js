@@ -1,11 +1,11 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 
-import Login from "./Containers/Login/Login";
-import Signup from "./Containers/Signup/Signup";
-import ForgotPassword from "./Containers/ForgotPassword/ForgotPassword";
-import ResetPassword from "./Containers/ResetPassword/ResetPassword";
-import VerifyAccount from "./Containers/VerifyAccount/VerifyAccount";
+import Login from "./Containers/Authentication/Login/Login";
+import Signup from "./Containers/Authentication/Signup/Signup";
+import ForgotPassword from "./Containers/Authentication/ForgotPassword/ForgotPassword";
+import ResetPassword from "./Containers/Authentication/ResetPassword/ResetPassword";
+import VerifyAccount from "./Containers/Authentication/VerifyAccount/VerifyAccount";
 import Dashboard from "./Containers/Dashboard/Dashboard";
 import MailUsers from "./Containers/MailUsers/MailUsers";
 import AddUser from "./Containers/AddUser/AddUser";
