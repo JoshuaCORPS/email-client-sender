@@ -9,13 +9,13 @@ const InputPassword = ({ value, handleChange }) => {
       <Form.Item
         name="itemPassword"
         rules={[
-          { required: true, message: "Please input your Password!" },
+          { required: true, message: "Please input Password!" },
           { min: 8, message: "Password must have at least 8 characters!" },
         ]}
       >
         <Input.Password
           name="password"
-          value={value.password}
+          value={value}
           onChange={handleChange}
           prefix={<LockOutlined />}
           size="large"

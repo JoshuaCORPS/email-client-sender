@@ -11,7 +11,7 @@ const InputPasswordConfirm = ({ value, handleChange }) => {
         dependencies={["itemPassword"]}
         hasFeedback
         rules={[
-          { required: true, message: "Please confirm your Password!" },
+          { required: true, message: "Please confirm Password!" },
           ({ getFieldValue }) => ({
             validator(_, value) {
               if (!value || getFieldValue("itemPassword") === value)
@@ -24,7 +24,7 @@ const InputPasswordConfirm = ({ value, handleChange }) => {
       >
         <Input.Password
           name="passwordConfirm"
-          value={value.passwordConfirm}
+          value={value}
           onChange={handleChange}
           prefix={<LockOutlined />}
           size="large"

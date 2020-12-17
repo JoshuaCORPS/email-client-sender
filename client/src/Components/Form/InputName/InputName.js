@@ -8,11 +8,11 @@ const InputName = ({ value, handleChange }) => {
       {/* For Name */}
       <Form.Item
         name="itemName"
-        rules={[{ required: true, message: "Please input your Name!" }]}
+        rules={[{ required: true, message: "Please input Name!" }]}
       >
         <Input
           name="name"
-          value={value.name}
+          value={value}
           onChange={handleChange}
           size="large"
           prefix={<UserOutlined />}

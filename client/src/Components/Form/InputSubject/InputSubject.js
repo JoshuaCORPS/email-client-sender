@@ -11,7 +11,7 @@ const inputSubject = ({ value, handleChange }) => {
       >
         <Input
           name="subject"
-          value={value.subject}
+          value={value}
           onChange={handleChange}
           size="large"
           placeholder="Subject"

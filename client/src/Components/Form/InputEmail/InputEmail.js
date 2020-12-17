@@ -9,13 +9,13 @@ const inputEmail = ({ value, handleChange }) => {
       <Form.Item
         name="itemEmail"
         rules={[
-          { required: true, message: "Please input your Email!" },
+          { required: true, message: "Please input Email!" },
           { type: "email", message: "Please input a valid Email!" },
         ]}
       >
         <Input
           name="email"
-          value={value.email}
+          value={value}
           onChange={handleChange}
           size="large"
           prefix={<MailOutlined />}
