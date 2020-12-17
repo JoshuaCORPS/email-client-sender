@@ -46,6 +46,10 @@ const MailUsers = () => {
         document.getElementById("alert")
       );
       setLoading(false);
+
+      setTimeout(() => {
+        ReactDOM.render("", document.getElementById("alert"));
+      }, 3000);
     }
   };
 
