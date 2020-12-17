@@ -29,11 +29,12 @@ const Login = () => {
           <Alert message="Success" type="success" showIcon />,
           document.getElementById("alert")
         );
+
       setLoading(false);
 
       setTimeout(() => {
         window.location.assign("/");
-      }, 2000);
+      }, 1000);
     } catch (error) {
       ReactDOM.render(
         <Alert message={error.response.data.message} type="error" showIcon />,
@@ -41,6 +42,10 @@ const Login = () => {
       );
 
       setLoading(false);
+
+      setTimeout(() => {
+        ReactDOM.render("", document.getElementById("alert"));
+      }, 3000);
     }
   };
   return (
