@@ -14,8 +14,8 @@ const userSchema = new mongoose.Schema({
   },
   contactNumber: {
     type: String,
-    minlength: [11, 'Contact number must have 11 digits'],
-    maxlength: [11, 'Contact number must have 11 digits'],
+    minlength: [11, 'Contact number must only have 11 digits'],
+    maxlength: [11, 'Contact number must only have 11 digits'],
     required: [true, 'Please provide your user contact number'],
   },
   address: {
