@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
-import { useForm } from "../../hooks/useForm";
 import { Form, Button, Row, Typography, Alert } from "antd";
 
-import InputEmail from "../../Components/Form/InputEmail/InputEmail";
+import { useForm } from "../../../hooks/useForm";
+import InputEmail from "../../../Components/Form/InputEmail/InputEmail";
 import classes from "./ForgotPassword.module.css";
 
 const { Title } = Typography;

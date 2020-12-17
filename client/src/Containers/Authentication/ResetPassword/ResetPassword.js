@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
-import { useForm } from "../../../hooks/useForm";
 import { withRouter } from "react-router-dom";
 import { Form, Button, Row, Typography, Alert } from "antd";
 
+import { useForm } from "../../../hooks/useForm";
 import InputPassword from "../../../Components/Form/InputPassword/InputPassword";
 import InputPasswordConfirm from "../../../Components/Form/InputPasswordConfirm/InputPasswordConfirm";
 import Spinner from "../../../Components/Spinner/Spinner";
-
 import classes from "./ResetPassword.module.css";
 
 const { Title } = Typography;

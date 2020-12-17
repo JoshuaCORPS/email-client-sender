@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
-import { useForm } from "../../hooks/useForm";
 import { Form, Button, Row, Typography, Alert } from "antd";
 
-import InputName from "../../Components/Form/InputName/InputName";
-import InputEmail from "../../Components/Form/InputEmail/InputEmail";
-import InputPassword from "../../Components/Form/InputPassword/InputPassword";
-import InputPasswordConfirm from "../../Components/Form/InputPasswordConfirm/InputPasswordConfirm";
+import { useForm } from "../../../hooks/useForm";
+import InputName from "../../../Components/Form/InputName/InputName";
+import InputEmail from "../../../Components/Form/InputEmail/InputEmail";
+import InputPassword from "../../../Components/Form/InputPassword/InputPassword";
+import InputPasswordConfirm from "../../../Components/Form/InputPasswordConfirm/InputPasswordConfirm";
 import classes from "./Signup.module.css";
 
 const { Title } = Typography;

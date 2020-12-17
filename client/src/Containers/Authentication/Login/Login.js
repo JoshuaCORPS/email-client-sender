@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { useForm } from "../../hooks/useForm";
 import { Form, Button, Row, Typography, Alert } from "antd";
 
-import InputEmail from "../../Components/Form/InputEmail/InputEmail";
-import InputPassword from "../../Components/Form/InputPassword/InputPassword";
-
+import { useForm } from "../../../hooks/useForm";
+import InputEmail from "../../../Components/Form/InputEmail/InputEmail";
+import InputPassword from "../../../Components/Form/InputPassword/InputPassword";
 import classes from "./Login.module.css";
 
 const { Title } = Typography;
