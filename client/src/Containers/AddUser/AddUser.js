@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
-import { Form, Row, Button, Typography, Alert } from "antd";
+import { Form, Row, Button, Typography, Alert, Col } from "antd";
 import { useForm } from "../../hooks/useForm";
 
 import InputName from "../../Components/Form/InputName/InputName";
@@ -70,14 +70,20 @@ const AddUser = () => {
         {/* For User Name */}
         <InputName value={values.name} handleChange={handleChange} />
 
-        {/* For User Email */}
-        <InputEmail value={values.name} handleChange={handleChange} />
+        <Row gutter={16}>
+          <Col span={12}>
+            {/* For User Email */}
+            <InputEmail value={values.name} handleChange={handleChange} />
+          </Col>
 
-        {/* For User Contact Number */}
-        <InputContactNumber
-          value={values.contactNumber}
-          handleChange={handleChange}
-        />
+          <Col span={12}>
+            {/* For User Contact Number */}
+            <InputContactNumber
+              value={values.contactNumber}
+              handleChange={handleChange}
+            />
+          </Col>
+        </Row>
 
         {/* For User Address */}
         <InputAddress value={values.address} handleChange={handleChange} />
