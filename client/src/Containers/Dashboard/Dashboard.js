@@ -12,7 +12,9 @@ const { Content, Header } = Layout;
 
 const logout = async () => {
   try {
-    const result = await axios.get("/api/v1/auth/logout");
+    const result = await axios.get("/api/v1/auth/logout", {
+      withCredentials: true,
+    });
     if (result.data.status === "success") {
       setTimeout(() => {
         window.location.assign("/login");
