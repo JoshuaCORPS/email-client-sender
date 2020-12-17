@@ -7,6 +7,11 @@ const catchAsync = require('../util/catchAsync');
 const AppError = require('../util/appError');
 
 exports.addUser = catchAsync(async (req, res, next) => {
+  const client = await Client.findById(req.client.id);
+
+  if (client.users.some((user) => user.email === req.body.email))
+    return next(new AppError('This user already exist!', 400));
+
   const user = await User.create({
     name: req.body.name,
     email: req.body.email,
@@ -15,7 +20,6 @@ exports.addUser = catchAsync(async (req, res, next) => {
 
   user.client = undefined;
 
-  const client = await Client.findById(req.client.id);
   client.users.push(user._id);
 
   await client.save({ validateBeforeSave: false });
