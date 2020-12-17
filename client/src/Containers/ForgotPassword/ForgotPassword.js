@@ -45,6 +45,10 @@ const ForgotPassword = () => {
       );
 
       setLoading(false);
+
+      setTimeout(() => {
+        ReactDOM.render("", document.getElementById("alert"));
+      }, 3000);
     }
   };
   return (
