@@ -12,11 +12,18 @@ exports.addUser = catchAsync(async (req, res, next) => {
   if (client.users.some((user) => user.email === req.body.email))
     return next(new AppError('This user already exist!', 400));
 
-  const user = await User.create({
-    name: req.body.name,
-    email: req.body.email,
-    client: req.client.id,
-  });
+  if (req.body.contactNumber && !req.body.contactNumber.startsWith('09'))
+    return next(new AppError("Contact number must start with '09...'", 400));
+
+  const filteredBody = filterObj(
+    req.body,
+    'name',
+    'email',
+    'contactNumber',
+    'address'
+  );
+
+  const user = await User.create(filteredBody);
 
   user.client = undefined;
 
