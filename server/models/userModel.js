@@ -12,6 +12,16 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Please provide your user email'],
     validate: [validator.isEmail, 'Please provide a valid email'],
   },
+  contactNumber: {
+    type: String,
+    minlength: [11, 'Contact number must have 11 digits'],
+    maxlength: [11, 'Contact number must have 11 digits'],
+    required: [true, 'Please provide your user contact number'],
+  },
+  address: {
+    type: String,
+    required: [true, 'Please provide your user address'],
+  },
   client: [
     {
       type: mongoose.Schema.ObjectId,
