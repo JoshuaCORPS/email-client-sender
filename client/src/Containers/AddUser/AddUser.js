@@ -6,13 +6,20 @@ import { useForm } from "../../hooks/useForm";
 
 import InputName from "../../Components/Form/InputName/InputName";
 import InputEmail from "../../Components/Form/InputEmail/InputEmail";
+import InputContactNumber from "../../Components/Form/InputContactNumber/InputContactNumber";
+import InputAddress from "../../Components/Form/InputAddress/InputAddress";
 
 import classes from "./AddUser.module.css";
 
 const { Title } = Typography;
 
 const AddUser = () => {
-  const [values, handleChange] = useForm({ name: "", email: "" });
+  const [values, handleChange] = useForm({
+    name: "",
+    email: "",
+    contactNumber: "",
+    address: "",
+  });
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
@@ -46,11 +53,12 @@ const AddUser = () => {
         <Alert message={error.response.data.message} type="error" showIcon />,
         document.getElementById("alert")
       );
+
       setLoading(false);
 
       setTimeout(() => {
         ReactDOM.render("", document.getElementById("alert"));
-      }, 3000);
+      }, 5000);
     }
   };
 
@@ -64,6 +72,15 @@ const AddUser = () => {
 
         {/* For User Email */}
         <InputEmail value={values.name} handleChange={handleChange} />
+
+        {/* For User Contact Number */}
+        <InputContactNumber
+          value={values.contactNumber}
+          handleChange={handleChange}
+        />
+
+        {/* For User Address */}
+        <InputAddress value={values.address} handleChange={handleChange} />
 
         {/* For Alert */}
         <div id="alert" className={classes.AlertMargin}></div>
