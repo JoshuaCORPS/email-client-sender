@@ -17,7 +17,7 @@ const handleValidationErrorDB = (err) => {
 
   for (let e in err.errors) arrErrors.push(err.errors[e].message);
 
-  const message = `Invalid input data:\n${arrErrors.join('.\n')}`;
+  const message = `${arrErrors.join('.\n')}`;
 
   return new AppError(message, 400);
 };
