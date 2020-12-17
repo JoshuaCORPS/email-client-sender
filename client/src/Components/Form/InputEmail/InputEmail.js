@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Input } from "antd";
 import { MailOutlined } from "@ant-design/icons";
 
-const inputEmail = ({ value, handleChange }) => {
+const InputEmail = ({ value, handleChange }) => {
   return (
     <>
       {/* For Email */}
@@ -26,4 +26,4 @@ const inputEmail = ({ value, handleChange }) => {
   );
 };
 
-export default inputEmail;
+export default InputEmail;
