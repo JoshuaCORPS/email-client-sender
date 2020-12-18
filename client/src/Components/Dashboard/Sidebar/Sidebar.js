@@ -15,6 +15,7 @@ import {
   MailOutlined,
   UsergroupAddOutlined,
   LogoutOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 
 const { SubMenu } = Menu;
@@ -82,11 +83,20 @@ const Sidebar = ({ client, logoutHandler }) => {
 
         <SubMenu key="sub2" icon={<UsergroupAddOutlined />} title="Users">
           <Menu.Item>
-            {" "}
             <Link to="/users/add-user">Add User</Link>
           </Menu.Item>
           <Menu.Item>Manage User</Menu.Item>
         </SubMenu>
+
+        <SubMenu key="sub3" icon={<SettingOutlined />} title="Account Settings">
+          <Menu.Item>
+            <Link to="/account/update-info">Update Information</Link>
+          </Menu.Item>
+          <Menu.Item>
+            <Link to="/account/update-password">Update Password</Link>
+          </Menu.Item>
+        </SubMenu>
+
         <Menu.Item
           icon={<LogoutOutlined />}
           onClick={logoutHandler}
