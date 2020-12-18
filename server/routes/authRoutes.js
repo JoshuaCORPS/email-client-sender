@@ -13,4 +13,8 @@ Router.route('/reset-password/:token')
   .get(authController.verifyResetToken)
   .post(authController.resetPassword);
 
+Router.use(authController.protect);
+Router.patch('/update-info', authController.updateInfo);
+Router.patch('/update-password', authController.updatePassword);
+
 module.exports = Router;
