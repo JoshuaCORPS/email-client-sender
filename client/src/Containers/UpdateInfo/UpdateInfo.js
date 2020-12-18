@@ -12,12 +12,12 @@ import classes from "./UpdateInfo.module.css";
 
 const { Title } = Typography;
 
-const UpdateInfo = ({ name, email, contactNumber, address }) => {
+const UpdateInfo = () => {
   const [values, handleChange] = useForm({
-    name,
-    email,
-    contactNumber,
-    address,
+    name: "",
+    email: "",
+    contactNumber: "",
+    address: "",
   });
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
