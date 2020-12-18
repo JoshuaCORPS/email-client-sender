@@ -15,6 +15,16 @@ const clientSchema = new mongoose.Schema({
     required: [true, 'Please provide your email'],
     validate: [validator.isEmail, 'Please provide a valid email.'],
   },
+  contactNumber: {
+    type: String,
+    minlength: [11, 'Contact number must only have 11 digits'],
+    maxlength: [11, 'Contact number must only have 11 digits'],
+    required: [true, 'Please provide your contact number'],
+  },
+  address: {
+    type: String,
+    required: [true, 'Please provide your address'],
+  },
   password: {
     type: String,
     select: false,
