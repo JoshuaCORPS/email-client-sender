@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
-import { Form, Row, Button, Typography, Alert, Col } from "antd";
+import { Form, Row, Button, Typography, Alert } from "antd";
 
 import { useForm } from "../../hooks/useForm";
 import InputNewPassword from "../../Components/Form/InputCurrentPassword/InputCurrentPassword";
