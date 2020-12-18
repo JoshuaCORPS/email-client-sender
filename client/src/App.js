@@ -10,6 +10,7 @@ import Dashboard from "./Containers/Dashboard/Dashboard";
 import MailUsers from "./Containers/MailUsers/MailUsers";
 import AddUser from "./Containers/AddUser/AddUser";
 import UpdateInfo from "./Containers/UpdateInfo/UpdateInfo";
+import UpdatePassword from "./Containers/UpdatePassword/UpdatePassword";
 
 const App = () => {
   return (
@@ -26,6 +27,10 @@ const App = () => {
         <Route
           path="/account/update-info"
           render={() => <Dashboard content={<UpdateInfo />} />}
+        />
+        <Route
+          path="/account/update-password"
+          render={() => <Dashboard content={<UpdatePassword />} />}
         />
         <Route path="/verify/:token" component={VerifyAccount} />
         <Route path="/reset-password/:token" component={ResetPassword} />
