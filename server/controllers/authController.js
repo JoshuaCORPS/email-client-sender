@@ -7,6 +7,7 @@ const Client = require('../models/clientModel');
 const sendEmail = require('../util/email');
 const catchAsync = require('../util/catchAsync');
 const AppError = require('../util/appError');
+const filterObj = require('../util/filterObjBody');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -44,13 +45,22 @@ exports.register = catchAsync(async (req, res, next) => {
     .update(verifyToken)
     .digest('hex');
 
-  await Client.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
-    emailVerifyToken: hashedToken,
-  });
+  if (req.body.contactNumber && !req.body.contactNumber.startsWith('09'))
+    return next(new AppError("Contact number must start with '09...'", 400));
+
+  const filteredBody = filterObj(
+    req.body,
+    'name',
+    'email',
+    'contactNumber',
+    'address',
+    'password',
+    'passwordConfirm'
+  );
+
+  filteredBody.emailVerifyToken = hashedToken;
+
+  await Client.create(filteredBody);
 
   const verifyURL = `${req.protocol}://${req.get(
     'host'
@@ -261,5 +271,50 @@ exports.verifyResetToken = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
+  });
+});
+
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  const { currentPassword, newPassword, newPasswordConfirm } = req.body;
+
+  if (!currentPassword || !newPassword || !newPasswordConfirm)
+    return next(new AppError('Please input your credentials!', 400));
+
+  const client = await Client.findById(req.client.id).select('+password');
+
+  if (
+    !client ||
+    !(await client.isPasswordCorrect(currentPassword, client.password))
+  )
+    return next(new AppError('Incorrect Current Password!', 400));
+
+  client.password = newPassword;
+  client.passwordConfirm = newPasswordConfirm;
+  await client.save();
+
+  createSendCookieTokenResponse(client, 200, res, req);
+});
+
+exports.updateInfo = catchAsync(async (req, res, next) => {
+  const filteredBody = filterObj(
+    req.body,
+    'name',
+    'email',
+    'contactNumber',
+    'address'
+  );
+
+  const client = await Client.findByIdAndUpdate(req.client.id, filteredBody, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!client) return next(new AppError('client not found!', 404));
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      client,
+    },
   });
 });
