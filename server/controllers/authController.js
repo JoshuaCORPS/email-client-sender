@@ -275,9 +275,9 @@ exports.verifyResetToken = catchAsync(async (req, res, next) => {
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
-  const { currentPassword, newPassword, newPasswordConfirm } = req.body;
+  const { currentPassword, password, passwordConfirm } = req.body;
 
-  if (!currentPassword || !newPassword || !newPasswordConfirm)
+  if (!currentPassword || !password || !passwordConfirm)
     return next(new AppError('Please input your credentials!', 400));
 
   const client = await Client.findById(req.client.id).select('+password');
@@ -288,8 +288,8 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   )
     return next(new AppError('Incorrect Current Password!', 400));
 
-  client.password = newPassword;
-  client.passwordConfirm = newPasswordConfirm;
+  client.password = password;
+  client.passwordConfirm = passwordConfirm;
   await client.save();
 
   createSendCookieTokenResponse(client, 200, res, req);
