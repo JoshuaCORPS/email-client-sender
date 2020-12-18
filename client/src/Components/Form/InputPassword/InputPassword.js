@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Input } from "antd";
 import { LockOutlined } from "@ant-design/icons";
 
-const InputPassword = ({ value, handleChange }) => {
+const InputPassword = ({ value, handleChange, placeholder = "Password" }) => {
   return (
     <>
       {/* For Password */}
@@ -20,7 +20,7 @@ const InputPassword = ({ value, handleChange }) => {
           prefix={<LockOutlined />}
           size="large"
           type="password"
-          placeholder="Password"
+          placeholder={placeholder}
         />
       </Form.Item>
     </>
