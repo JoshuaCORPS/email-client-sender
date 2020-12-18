@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
 import { Form, Row, Button, Typography, Alert, Col } from "antd";
-import { useForm } from "../../hooks/useForm";
 
+import { useForm } from "../../hooks/useForm";
 import InputName from "../../Components/Form/InputName/InputName";
 import InputEmail from "../../Components/Form/InputEmail/InputEmail";
 import InputContactNumber from "../../Components/Form/InputContactNumber/InputContactNumber";
 import InputAddress from "../../Components/Form/InputAddress/InputAddress";
-
 import classes from "./AddUser.module.css";
 
 const { Title } = Typography;
@@ -73,7 +72,7 @@ const AddUser = () => {
         <Row gutter={16}>
           <Col span={12}>
             {/* For User Email */}
-            <InputEmail value={values.name} handleChange={handleChange} />
+            <InputEmail value={values.email} handleChange={handleChange} />
           </Col>
 
           <Col span={12}>
