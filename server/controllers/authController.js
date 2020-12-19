@@ -1,9 +1,10 @@
 const { promisify } = require('util');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const sharp = require('sharp');
 
 const Client = require('../models/clientModel');
-
 const sendEmail = require('../util/email');
 const catchAsync = require('../util/catchAsync');
 const AppError = require('../util/appError');
@@ -37,6 +38,18 @@ const createSendCookieTokenResponse = (client, statusCode, res, req) => {
     },
   });
 };
+
+// save image to memory(req.file.buffer)
+const multerStorage = multer.memoryStorage();
+
+// accept only image files
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) cb(null, true);
+  else cb(new AppError('Not an image! Please upload only images.', 400), false);
+};
+
+// upload image to desginated path
+const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
 
 exports.register = catchAsync(async (req, res, next) => {
   const verifyToken = crypto.randomBytes(32).toString('hex');
@@ -274,6 +287,24 @@ exports.verifyResetToken = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.uploadPhoto = upload.single('photo');
+
+exports.resizePhoto = (req, res, next) => {
+  if (!req.file) return next();
+
+  req.file.filename = `${req.client.name.split(' ').join('-')}-${
+    req.client.id
+  }-${Date.now()}.jpeg`;
+
+  sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(`server/public/img/users/${req.file.filename}`);
+
+  next();
+};
+
 exports.updatePassword = catchAsync(async (req, res, next) => {
   const { currentPassword, password, passwordConfirm } = req.body;
 
@@ -303,6 +334,8 @@ exports.updateInfo = catchAsync(async (req, res, next) => {
     'contactNumber',
     'address'
   );
+
+  if (req.file) filteredBody.photo = req.file.filename;
 
   const client = await Client.findByIdAndUpdate(req.client.id, filteredBody, {
     new: true,
