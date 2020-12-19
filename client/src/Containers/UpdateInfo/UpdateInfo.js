@@ -61,13 +61,21 @@ const UpdateInfo = () => {
           />,
           document.getElementById("alert")
         );
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const sidebarPhoto = document.getElementById("sidebarclientphoto");
+          sidebarPhoto.getElementsByTagName("img")[0].src = event.target.result;
+        };
+        reader.readAsDataURL(selectedFile);
+
+        document.getElementById("clientname").innerHTML = values.name;
       }
 
       setLoading(false);
 
       setTimeout(() => {
         ReactDOM.render("", document.getElementById("alert"));
-        window.location.assign("/");
       }, 3000);
     } catch (error) {
       ReactDOM.render(
@@ -88,8 +96,9 @@ const UpdateInfo = () => {
     if (e.file) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        const parent = document.getElementById("clientphoto");
-        parent.getElementsByTagName("img")[0].src = event.target.result;
+        const updateInfoPhoto = document.getElementById("clientphoto");
+        updateInfoPhoto.getElementsByTagName("img")[0].src =
+          event.target.result;
       };
       reader.readAsDataURL(e.file.originFileObj);
     }
@@ -163,7 +172,9 @@ const UpdateInfo = () => {
 
         <Avatar
           id="clientphoto"
-          src={`https://corps-sender.herokuapp.com/img/users/${client.photo}`}
+          src={`https://corps-sender.herokuapp.com/img/users/${
+            client.photo ? client.photo : "default.jpg"
+          }`}
           style={{ marginRight: "2rem" }}
           size={{ xs: 60, sm: 60, md: 60, lg: 60, xl: 60, xxl: 60 }}
         />
