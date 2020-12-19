@@ -49,13 +49,20 @@ const Sidebar = ({ client, logoutHandler }) => {
       >
         <Col span={6}>
           <Avatar
-            src={`https://corps-sender.herokuapp.com/img/users/${client.photo}`}
+            id="sidebarclientphoto"
+            src={`https://corps-sender.herokuapp.com/img/users/${
+              client.photo ? client.photo : "default.jpg"
+            }`}
             alt={client.name && `${client.name} picture`}
             size={{ xs: 60, sm: 60, md: 60, lg: 60, xl: 60, xxl: 60 }}
           />
         </Col>
         <Col>
-          <Title level={2} style={{ color: "white", fontSize: "1.1rem" }}>
+          <Title
+            id="clientname"
+            level={2}
+            style={{ color: "white", fontSize: "1.1rem" }}
+          >
             {client.name}
           </Title>
           <Row justify="center">
