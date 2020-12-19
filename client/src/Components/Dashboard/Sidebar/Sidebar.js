@@ -49,7 +49,7 @@ const Sidebar = ({ client, logoutHandler }) => {
       >
         <Col span={6}>
           <Avatar
-            src="https://i.ytimg.com/vi/gY_i1LcDObU/maxresdefault.jpg"
+            src={`https://corps-sender.herokuapp.com/img/users/${client.photo}`}
             alt={client.name && `${client.name} picture`}
             size={{ xs: 60, sm: 60, md: 60, lg: 60, xl: 60, xxl: 60 }}
           />
