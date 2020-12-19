@@ -175,7 +175,7 @@ const UpdateInfo = () => {
           src={`https://corps-sender.herokuapp.com/img/users/${
             client.photo ? client.photo : "default.jpg"
           }`}
-          style={{ marginRight: "2rem" }}
+          style={{ marginRight: "1rem" }}
           size={{ xs: 60, sm: 60, md: 60, lg: 60, xl: 60, xxl: 60 }}
         />
 
