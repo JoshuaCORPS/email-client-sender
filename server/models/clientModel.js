@@ -56,6 +56,10 @@ const clientSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  photo: {
+    type: String,
+    default: 'default.jpg',
+  },
   emailVerifyToken: String,
   passwordResetToken: String,
   passwordResetExpires: String,
