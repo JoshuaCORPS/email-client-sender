@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
@@ -24,6 +25,8 @@ const app = express();
 const allowedOrigins = ['https://e-sender.vercel.app', 'http://localhost:3000'];
 
 app.enable('trust proxy');
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(
   cors({
