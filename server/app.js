@@ -48,7 +48,7 @@ app.use(helmet());
 app.use(
   '/api',
   rateLimit({
-    max: 100,
+    max: 200,
     windowMs: 60 * 60 * 1000,
     message: 'Too many request! Please try again later.',
   })
