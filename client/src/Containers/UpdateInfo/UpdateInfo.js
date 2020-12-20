@@ -43,7 +43,7 @@ const UpdateInfo = () => {
       fd.append("email", values.email);
       fd.append("contactNumber", values.contactNumber);
       fd.append("address", values.address);
-      fd.append("photo", selectedFile);
+      if (selectedFile) fd.append("photo", selectedFile);
 
       const updateClientInfo = await axios.patch(
         "/api/v1/auth/update-info",
@@ -62,12 +62,15 @@ const UpdateInfo = () => {
           document.getElementById("alert")
         );
 
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const sidebarPhoto = document.getElementById("sidebarclientphoto");
-          sidebarPhoto.getElementsByTagName("img")[0].src = event.target.result;
-        };
-        reader.readAsDataURL(selectedFile);
+        if (selectedFile) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const sidebarPhoto = document.getElementById("sidebarclientphoto");
+            sidebarPhoto.getElementsByTagName("img")[0].src =
+              event.target.result;
+          };
+          reader.readAsDataURL(selectedFile);
+        }
 
         document.getElementById("clientname").innerHTML = values.name;
       }
@@ -78,6 +81,7 @@ const UpdateInfo = () => {
         ReactDOM.render("", document.getElementById("alert"));
       }, 3000);
     } catch (error) {
+      console.log(error);
       ReactDOM.render(
         <Alert message={error.response.data.message} type="error" showIcon />,
         document.getElementById("alert")
