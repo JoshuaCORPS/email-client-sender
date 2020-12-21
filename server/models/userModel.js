@@ -22,12 +22,29 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide your user address'],
   },
+  monthlyBill: {
+    type: Number,
+    min: [1, 'Monthly bill should be at least greater than or equal to 1'],
+    required: [true, 'Please provide your user monthly bill'],
+  },
+  billDate: {
+    type: Date,
+    required: [true, 'Please provide your user bill date'],
+  },
+  balance: {
+    type: Number,
+    default: 0,
+  },
   client: [
     {
       type: mongoose.Schema.ObjectId,
       ref: 'Client',
     },
   ],
+  billSentDate: {
+    type: Date,
+    // default: new Date(Date.now() - 24 * 60 * 60 * 1000),
+  },
 });
 
 module.exports = mongoose.model('User', userSchema);
