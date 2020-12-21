@@ -20,10 +20,16 @@ exports.addUser = catchAsync(async (req, res, next) => {
     'name',
     'email',
     'contactNumber',
-    'address'
+    'address',
+    'monthlyBill',
+    'billDate'
   );
 
+  if (req.body.balance) filteredBody.balance = req.body.balance;
+
   const user = await User.create(filteredBody);
+  user.client.push(client._id);
+  await user.save();
 
   user.client = undefined;
 
