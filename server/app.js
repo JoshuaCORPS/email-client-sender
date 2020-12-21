@@ -17,6 +17,7 @@ const clientRouter = require('./routes/clientRoutes');
 const adminRouter = require('./routes/adminRoutes');
 
 const errorController = require('./controllers/errorController');
+const statusController = require('./controllers/statusController');
 
 const AppError = require('./util/appError');
 
@@ -67,6 +68,7 @@ app.use('/api/v1/view', viewRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/clients', clientRouter);
 app.use('/api/v1/admin', adminRouter);
+app.get('/api/v1/status', statusController.status);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
