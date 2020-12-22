@@ -43,7 +43,6 @@ const userSchema = new mongoose.Schema({
   ],
   billSentDate: {
     type: Date,
-    // default: new Date(Date.now() - 24 * 60 * 60 * 1000),
   },
 });
 
