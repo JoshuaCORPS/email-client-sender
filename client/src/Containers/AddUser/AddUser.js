@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
-import { Form, Row, Button, Typography, Alert, Col } from "antd";
+import { Form, Row, Button, Typography, Alert, Col, Divider } from "antd";
 
 import { useForm } from "../../hooks/useForm";
 import InputName from "../../Components/Form/InputName/InputName";
 import InputEmail from "../../Components/Form/InputEmail/InputEmail";
 import InputContactNumber from "../../Components/Form/InputContactNumber/InputContactNumber";
 import InputAddress from "../../Components/Form/InputAddress/InputAddress";
+import InputBill from "../../Components/Form/InputBill/InputBill";
+import InputBalance from "../../Components/Form/InputBalance/InputBalance";
+import InputDate from "../../Components/Form/InputDate/InputDate";
 import classes from "./AddUser.module.css";
 
 const { Title } = Typography;
@@ -18,6 +21,9 @@ const AddUser = () => {
     email: "",
     contactNumber: "",
     address: "",
+    monthlyBill: "",
+    balance: "0",
+    billDate: "",
   });
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
@@ -25,7 +31,6 @@ const AddUser = () => {
   const submitFormData = async () => {
     try {
       setLoading(true);
-
       const addUser = await axios.post("/api/v1/clients/users", values, {
         withCredentials: true,
       });
@@ -86,6 +91,19 @@ const AddUser = () => {
 
         {/* For User Address */}
         <InputAddress value={values.address} handleChange={handleChange} />
+
+        <Divider />
+
+        <Title level={3}>Billing Information</Title>
+
+        <InputBill value={values.monthlyBill} handleChange={handleChange} />
+
+        <InputBalance value={values.balance} handleChange={handleChange} />
+
+        <InputDate
+          value={values.billDate}
+          handleChange={(_, dateString) => (values.billDate = dateString)}
+        />
 
         {/* For Alert */}
         <div id="alert" className={classes.AlertMargin}></div>
