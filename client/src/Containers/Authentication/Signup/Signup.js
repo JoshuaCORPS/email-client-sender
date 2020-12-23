@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import ReactDOM from "react-dom";
-import axios from "axios";
-import { Form, Button, Row, Typography, Alert, Col } from "antd";
+import { Form, Button, Row, Typography, Col } from "antd";
 
 import { useForm } from "../../../hooks/useForm";
+import { submitData } from "../../../util/submit-data";
 import InputName from "../../../Components/Form/InputName/InputName";
 import InputEmail from "../../../Components/Form/InputEmail/InputEmail";
 import InputContactNumber from "../../../Components/Form/InputContactNumber/InputContactNumber";
@@ -29,37 +28,26 @@ const Signup = () => {
     try {
       setLoading(true);
 
-      const registerClient = await axios.post("/api/v1/auth/register", values);
+      const endpoint = "/api/v1/auth/register";
+      const alertDesc = "Please check your email to verify your account!";
+      const setTimeoutFN = () => window.location.assign("/login");
 
-      if (registerClient.data.status === "success")
-        ReactDOM.render(
-          <Alert
-            message="Success"
-            description="Please check your email to verify your account!"
-            type="success"
-            showIcon
-          />,
-          document.getElementById("alert")
-        );
-
-      setLoading(false);
-
-      setTimeout(() => {
-        window.location.assign("/login");
-      }, 2000);
-    } catch (error) {
-      ReactDOM.render(
-        <Alert message={error.response.data.message} type="error" showIcon />,
-        document.getElementById("alert")
+      await submitData(
+        "POST",
+        endpoint,
+        values,
+        {},
+        alertDesc,
+        setTimeoutFN,
+        3000
       );
 
       setLoading(false);
-
-      setTimeout(() => {
-        ReactDOM.render("", document.getElementById("alert"));
-      }, 3000);
+    } catch (error) {
+      console.error(error.message);
     }
   };
+
   return (
     <Row align="middle" justify="center" className={classes.RowVH}>
       <Form className={classes.FormSize} onFinish={submitFormData}>
