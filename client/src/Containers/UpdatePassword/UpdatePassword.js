@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import axios from "axios";
-import { Form, Row, Button, Typography, Alert } from "antd";
+import { Form, Row, Button, Typography } from "antd";
 
 import { useForm } from "../../hooks/useForm";
+import { submitData } from "../../util/submit-data";
 import InputNewPassword from "../../Components/Form/InputCurrentPassword/InputCurrentPassword";
 import InputPassword from "../../Components/Form/InputPassword/InputPassword";
 import InputPasswordConfirm from "../../Components/Form/InputPasswordConfirm/InputPasswordConfirm";
@@ -25,40 +25,27 @@ const UpdatePassword = () => {
     try {
       setLoading(true);
 
-      const updatePassword = await axios.patch(
-        "/api/v1/auth/update-password",
-        values,
-        { withCredentials: true }
-      );
-
-      if (updatePassword.data.status === "success")
-        ReactDOM.render(
-          <Alert
-            message="Success"
-            description="Your password has been updated!"
-            type="success"
-            showIcon
-          />,
-          document.getElementById("alert")
-        );
-
-      setLoading(false);
-
-      setTimeout(() => {
+      const endpoint = "/api/v1/auth/update-password";
+      const alertDesc = "Your password has been updated!";
+      const options = { withCredentials: true };
+      const setTimeoutFN = () => {
         ReactDOM.render("", document.getElementById("alert"));
         form.resetFields();
-      }, 3000);
-    } catch (error) {
-      ReactDOM.render(
-        <Alert message={error.response.data.message} type="error" showIcon />,
-        document.getElementById("alert")
+      };
+
+      await submitData(
+        "PATCH",
+        endpoint,
+        values,
+        options,
+        alertDesc,
+        setTimeoutFN,
+        3000
       );
 
       setLoading(false);
-
-      setTimeout(() => {
-        ReactDOM.render("", document.getElementById("alert"));
-      }, 5000);
+    } catch (error) {
+      console.error(error.message);
     }
   };
 
