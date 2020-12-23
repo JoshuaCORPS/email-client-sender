@@ -174,6 +174,7 @@ const UpdateInfo = () => {
         {/* For Client Address */}
         <InputAddress value={values.address} handleChange={handleChange} />
 
+        {/* For Client Image */}
         <Avatar
           id="clientphoto"
           src={`https://corps-sender.herokuapp.com/img/users/${
@@ -183,13 +184,14 @@ const UpdateInfo = () => {
           size={{ xs: 60, sm: 60, md: 60, lg: 60, xl: 60, xxl: 60 }}
         />
 
+        {/* For Image Input */}
         <Upload
           name="photo"
           accept="image/*"
           onChange={fileChangedHandler}
           customRequest={dummyRequest}
         >
-          <Button icon={<UploadOutlined />}>Click to Upload</Button>
+          <Button icon={<UploadOutlined />}>Browse Image</Button>
         </Upload>
 
         {/* For Alert */}
