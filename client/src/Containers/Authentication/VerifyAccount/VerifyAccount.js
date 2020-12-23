@@ -8,49 +8,45 @@ import classes from "./VerifyAccount.module.css";
 
 const VerifyAccount = (props) => {
   useEffect(() => {
-    try {
-      const verifyToken = async () => {
-        try {
-          const result = await axios.post(
-            `/api/v1/auth/verify/${props.match.params.token}`
-          );
+    const verifyToken = async () => {
+      try {
+        const result = await axios.post(
+          `/api/v1/auth/verify/${props.match.params.token}`
+        );
 
-          if (result.data.status === "success") {
-            ReactDOM.render(
-              <Alert
-                message="Success"
-                description={result.data.message}
-                type="success"
-                showIcon
-              />,
-              document.getElementById("alert")
-            );
-
-            setTimeout(() => {
-              window.location.assign("/login");
-            }, 2000);
-          }
-        } catch (error) {
+        if (result.data.status === "success") {
           ReactDOM.render(
             <Alert
-              message="Failed"
-              description="Account token is not valid!"
-              type="error"
+              message="Success"
+              description={result.data.message}
+              type="success"
               showIcon
             />,
             document.getElementById("alert")
           );
 
           setTimeout(() => {
-            window.location.assign("/signup");
+            window.location.assign("/login");
           }, 2000);
         }
-      };
+      } catch (error) {
+        ReactDOM.render(
+          <Alert
+            message="Failed"
+            description="Account token is not valid!"
+            type="error"
+            showIcon
+          />,
+          document.getElementById("alert")
+        );
 
-      verifyToken();
-    } catch (error) {
-      console.log(error);
-    }
+        setTimeout(() => {
+          window.location.assign("/signup");
+        }, 2000);
+      }
+    };
+
+    verifyToken();
   }, [props.match.params.token]);
 
   return (
