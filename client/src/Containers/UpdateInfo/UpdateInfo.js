@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
-import {
-  Form,
-  Row,
-  Button,
-  Typography,
-  Alert,
-  Col,
-  Upload,
-  Avatar,
-} from "antd";
+import { Form, Row, Button, Typography, Col, Upload, Avatar } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 
 import { useForm } from "../../hooks/useForm";
+import { submitData } from "../../util/submit-data";
 import InputName from "../../Components/Form/InputName/InputName";
 import InputEmail from "../../Components/Form/InputEmail/InputEmail";
 import InputContactNumber from "../../Components/Form/InputContactNumber/InputContactNumber";
@@ -38,6 +30,12 @@ const UpdateInfo = () => {
     try {
       setLoading(true);
 
+      const endpoint = "/api/v1/auth/update-info";
+      const alertDesc = "Your info has been updated!";
+      const options = { withCredentials: true };
+      const setTimeoutFN = () =>
+        ReactDOM.render("", document.getElementById("alert"));
+
       const fd = new FormData();
       fd.append("name", values.name);
       fd.append("email", values.email);
@@ -45,53 +43,30 @@ const UpdateInfo = () => {
       fd.append("address", values.address);
       if (selectedFile) fd.append("photo", selectedFile);
 
-      const updateClientInfo = await axios.patch(
-        "/api/v1/auth/update-info",
+      await submitData(
+        "PATCH",
+        endpoint,
         fd,
-        { withCredentials: true }
+        options,
+        alertDesc,
+        setTimeoutFN,
+        3000
       );
 
-      if (updateClientInfo.data.status === "success") {
-        ReactDOM.render(
-          <Alert
-            message="Success"
-            description="Your info has been updated!"
-            type="success"
-            showIcon
-          />,
-          document.getElementById("alert")
-        );
-
-        if (selectedFile) {
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            const sidebarPhoto = document.getElementById("sidebarclientphoto");
-            sidebarPhoto.getElementsByTagName("img")[0].src =
-              event.target.result;
-          };
-          reader.readAsDataURL(selectedFile);
-        }
-
-        document.getElementById("clientname").innerHTML = values.name;
+      if (selectedFile) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const sidebarPhoto = document.getElementById("sidebarclientphoto");
+          sidebarPhoto.getElementsByTagName("img")[0].src = event.target.result;
+        };
+        reader.readAsDataURL(selectedFile);
       }
 
-      setLoading(false);
+      document.getElementById("clientname").innerHTML = values.name;
 
-      setTimeout(() => {
-        ReactDOM.render("", document.getElementById("alert"));
-      }, 3000);
+      setLoading(false);
     } catch (error) {
-      console.log(error);
-      ReactDOM.render(
-        <Alert message={error.response.data.message} type="error" showIcon />,
-        document.getElementById("alert")
-      );
-
-      setLoading(false);
-
-      setTimeout(() => {
-        ReactDOM.render("", document.getElementById("alert"));
-      }, 5000);
+      console.error(error.message);
     }
   };
 
@@ -115,36 +90,33 @@ const UpdateInfo = () => {
   };
 
   useEffect(() => {
-    try {
-      const getInfo = async () => {
-        try {
-          const result = await axios.get("/api/v1/view/", {
-            withCredentials: true,
+    const getInfo = async () => {
+      try {
+        const result = await axios.get("/api/v1/view/", {
+          withCredentials: true,
+        });
+
+        if (result.data.status === "success") {
+          form.setFieldsValue({
+            itemName: result.data.data.client.name,
+            itemEmail: result.data.data.client.email,
+            itemContactNumber: result.data.data.client.contactNumber,
+            itemAddress: result.data.data.client.address,
           });
 
-          if (result.data.status === "success") {
-            form.setFieldsValue({
-              itemName: result.data.data.client.name,
-              itemEmail: result.data.data.client.email,
-              itemContactNumber: result.data.data.client.contactNumber,
-              itemAddress: result.data.data.client.address,
-            });
-
-            values.name = result.data.data.client.name;
-            values.email = result.data.data.client.email;
-            values.contactNumber = result.data.data.client.contactNumber;
-            values.address = result.data.data.client.address;
-            setClient(result.data.data.client);
-          }
-        } catch (error) {
-          window.location.assign("/login");
+          values.name = result.data.data.client.name;
+          values.email = result.data.data.client.email;
+          values.contactNumber = result.data.data.client.contactNumber;
+          values.address = result.data.data.client.address;
+          setClient(result.data.data.client);
         }
-      };
+      } catch (error) {
+        window.location.assign("/login");
+      }
+    };
 
-      getInfo();
-    } catch (error) {
-      console.log(error);
-    }
+    getInfo();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
