@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import axios from "axios";
-import { Form, Row, Button, Typography, Alert } from "antd";
-import { useForm } from "../../hooks/useForm";
+import { Form, Row, Button, Typography } from "antd";
 
+import { useForm } from "../../hooks/useForm";
+import { submitData } from "../../util/submit-data";
 import InputSubject from "../../Components/Form/InputSubject/InputSubject";
 import InputTextArea from "../../Components/Form/InputTextArea/InputTextArea";
 import classes from "./MailUsers.module.css";
@@ -19,37 +19,27 @@ const MailUsers = () => {
     try {
       setLoading(true);
 
-      const sendMail = await axios.post("/api/v1/clients/send-email", values, {
-        withCredentials: true,
-      });
-
-      if (sendMail.data.status === "success")
-        ReactDOM.render(
-          <Alert
-            message="Success"
-            description="Mail successfully sent!"
-            type="success"
-            showIcon
-          />,
-          document.getElementById("alert")
-        );
-
-      setLoading(false);
-
-      setTimeout(() => {
+      const endpoint = "/api/v1/clients/send-email";
+      const alertDesc = "Mail successfully sent!";
+      const options = { withCredentials: true };
+      const setTimeoutFN = () => {
         ReactDOM.render("", document.getElementById("alert"));
         form.resetFields();
-      }, 3000);
-    } catch (error) {
-      ReactDOM.render(
-        <Alert message={error.response.data.message} type="error" showIcon />,
-        document.getElementById("alert")
-      );
-      setLoading(false);
+      };
 
-      setTimeout(() => {
-        ReactDOM.render("", document.getElementById("alert"));
-      }, 3000);
+      await submitData(
+        "POST",
+        endpoint,
+        values,
+        options,
+        alertDesc,
+        setTimeoutFN,
+        3000
+      );
+
+      setLoading(false);
+    } catch (error) {
+      console.error(error.message);
     }
   };
 
