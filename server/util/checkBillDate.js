@@ -32,7 +32,7 @@ const checkBillingDate = async () => {
       billSentDate.toLocaleDateString() !== dateNow.toLocaleDateString()
     ) {
       user.billSentDate = new Date(Date.now()).toLocaleDateString();
-      user.balance = user.balance + user.monthlyBill;
+      user.balance += user.monthlyBill;
       await user.save();
 
       const message = `Dear ${user.name},\n\n\nWe're pleased to send your e-Bill with the following details:\n\nAmount to pay: ${user.balance}`;
