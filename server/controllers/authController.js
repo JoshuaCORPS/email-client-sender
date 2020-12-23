@@ -75,14 +75,12 @@ exports.register = catchAsync(async (req, res, next) => {
 
   await Client.create(filteredBody);
 
-  const verifyURL = `${req.protocol}://${req.get(
-    'host'
-  )}/api/v1/auth/verify/${verifyToken}`;
+  const verifyURL = `https://e-sender.vercel.app/verify/${verifyToken}`;
 
   const message = `To activate your account, please verify your email address.\nYour account will not be created until your email address is confirmed.\n\nClick this link to activate your account: ${verifyURL}`;
 
   await sendEmail({
-    from: 'Sender account@sender.com',
+    from: 'E-Sender Account <no-reply@e-sender.vercel.app>',
     email: req.body.email,
     subject: 'Verify Your Account',
     message,
@@ -207,15 +205,13 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const resetToken = client.createPasswordResetToken();
   await client.save({ validateBeforeSave: false });
 
-  const resetURL = `${req.protocol}://${req.get(
-    'host'
-  )}/api/v1/auth/reset-password/${resetToken}`;
+  const resetURL = `https://e-sender.vercel.app/reset-password/${resetToken}`;
 
   const message = `Hi ${client.name}.\n\nForgot your password? To reset your password, go to this link: ${resetURL}`;
 
   try {
     await sendEmail({
-      from: 'Sender support@sender.com',
+      from: 'E-Sender Account <no-reply@e-sender.vercel.app>',
       email,
       subject: 'Your password reset token (valid for only 10 minutes)',
       message,
