@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import axios from "axios";
-import { Form, Row, Button, Typography, Alert, Col, Divider } from "antd";
+import { Form, Row, Button, Typography, Col, Divider } from "antd";
 
 import { useForm } from "../../hooks/useForm";
+import { submitData } from "../../util/submit-data";
 import InputName from "../../Components/Form/InputName/InputName";
 import InputEmail from "../../Components/Form/InputEmail/InputEmail";
 import InputContactNumber from "../../Components/Form/InputContactNumber/InputContactNumber";
@@ -32,38 +32,27 @@ const AddUser = () => {
     try {
       setLoading(true);
 
-      const addUser = await axios.post("/api/v1/clients/users", values, {
-        withCredentials: true,
-      });
-
-      if (addUser.data.status === "success")
-        ReactDOM.render(
-          <Alert
-            message="Success"
-            description="User successfully added!"
-            type="success"
-            showIcon
-          />,
-          document.getElementById("alert")
-        );
-
-      setLoading(false);
-
-      setTimeout(() => {
+      const endpoint = "/api/v1/clients/users";
+      const alertDesc = "User successfully added!";
+      const options = { withCredentials: true };
+      const setTimeoutFN = () => {
         ReactDOM.render("", document.getElementById("alert"));
         form.resetFields();
-      }, 3000);
-    } catch (error) {
-      ReactDOM.render(
-        <Alert message={error.response.data.message} type="error" showIcon />,
-        document.getElementById("alert")
+      };
+
+      await submitData(
+        "POST",
+        endpoint,
+        values,
+        options,
+        alertDesc,
+        setTimeoutFN,
+        3000
       );
 
       setLoading(false);
-
-      setTimeout(() => {
-        ReactDOM.render("", document.getElementById("alert"));
-      }, 5000);
+    } catch (error) {
+      console.log(error);
     }
   };
 
