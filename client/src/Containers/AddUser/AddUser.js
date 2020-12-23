@@ -31,6 +31,7 @@ const AddUser = () => {
   const submitFormData = async () => {
     try {
       setLoading(true);
+
       const addUser = await axios.post("/api/v1/clients/users", values, {
         withCredentials: true,
       });
@@ -96,10 +97,13 @@ const AddUser = () => {
 
         <Title level={3}>Billing Information</Title>
 
+        {/* For Monthly Bill */}
         <InputBill value={values.monthlyBill} handleChange={handleChange} />
 
+        {/* For Balance */}
         <InputBalance value={values.balance} handleChange={handleChange} />
 
+        {/* For Billing Date */}
         <InputDate
           value={values.billDate}
           handleChange={(_, dateString) => (values.billDate = dateString)}
