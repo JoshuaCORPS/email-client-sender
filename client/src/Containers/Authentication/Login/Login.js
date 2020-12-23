@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import ReactDOM from "react-dom";
-import axios from "axios";
 import { Link } from "react-router-dom";
-import { Form, Button, Row, Typography, Alert } from "antd";
+import { Form, Button, Row, Typography } from "antd";
 
 import { useForm } from "../../../hooks/useForm";
+import { submitData } from "../../../util/submit-data";
 import InputEmail from "../../../Components/Form/InputEmail/InputEmail";
 import InputPassword from "../../../Components/Form/InputPassword/InputPassword";
 import classes from "./Login.module.css";
@@ -19,34 +18,27 @@ const Login = () => {
     try {
       setLoading(true);
 
-      const loginClient = await axios.post("/api/v1/auth/login", values, {
-        withCredentials: true,
-      });
+      const endpoint = "/api/v1/auth/login";
+      const alertDesc = "Logging in... Please wait!";
+      const options = { withCredentials: true };
+      const setTimeoutFN = () => window.location.assign("/");
 
-      if (loginClient.data.status === "success")
-        ReactDOM.render(
-          <Alert message="Success" type="success" showIcon />,
-          document.getElementById("alert")
-        );
-
-      setLoading(false);
-
-      setTimeout(() => {
-        window.location.assign("/");
-      }, 1000);
-    } catch (error) {
-      ReactDOM.render(
-        <Alert message={error.response.data.message} type="error" showIcon />,
-        document.getElementById("alert")
+      await submitData(
+        "POST",
+        endpoint,
+        values,
+        options,
+        alertDesc,
+        setTimeoutFN,
+        1000
       );
 
       setLoading(false);
-
-      setTimeout(() => {
-        ReactDOM.render("", document.getElementById("alert"));
-      }, 3000);
+    } catch (error) {
+      console.error(error.message);
     }
   };
+
   return (
     <Row align="middle" justify="center" className={classes.RowVH}>
       <Form className={classes.FormSize} onFinish={submitFormData}>
