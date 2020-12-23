@@ -32,24 +32,20 @@ const Dashboard = ({ content }) => {
   let body = <Spinner />;
 
   useEffect(() => {
-    try {
-      const verifyLoggedIn = async () => {
-        try {
-          const result = await axios.get("/api/v1/view/", {
-            withCredentials: true,
-          });
-          if (result.data.status === "success") {
-            setIsLoggedIn(true);
-            setClient(result.data.data.client);
-          }
-        } catch (error) {
-          window.location.assign("/login");
+    const verifyLoggedIn = async () => {
+      try {
+        const result = await axios.get("/api/v1/view/", {
+          withCredentials: true,
+        });
+        if (result.data.status === "success") {
+          setIsLoggedIn(true);
+          setClient(result.data.data.client);
         }
-      };
-      verifyLoggedIn();
-    } catch (error) {
-      console.log(error);
-    }
+      } catch (error) {
+        window.location.assign("/login");
+      }
+    };
+    verifyLoggedIn();
   }, []);
 
   if (isLoggedIn)
