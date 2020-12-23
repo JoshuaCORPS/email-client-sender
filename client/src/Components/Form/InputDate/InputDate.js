@@ -11,7 +11,7 @@ const InputDate = ({ value, handleChange }) => {
       >
         <DatePicker
           value={value}
-          placeholder="Select Billing Date"
+          placeholder="Billing Date"
           style={{ width: "100%" }}
           onChange={handleChange}
           format="MM/DD/YYYY"
