@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import ReactDOM from "react-dom";
-import axios from "axios";
-import { Form, Button, Row, Typography, Alert } from "antd";
+import { Form, Button, Row, Typography } from "antd";
 
 import { useForm } from "../../../hooks/useForm";
+import { submitData } from "../../../util/submit-data";
 import InputEmail from "../../../Components/Form/InputEmail/InputEmail";
 import classes from "./ForgotPassword.module.css";
 
@@ -17,40 +16,26 @@ const ForgotPassword = () => {
     try {
       setLoading(true);
 
-      const searchClient = await axios.post(
-        "/api/v1/auth/forgot-password",
-        values
+      const endpoint = "/api/v1/auth/forgot-password";
+      const alertDesc = "Please check your email to reset your password!";
+      const setTimeoutFN = () => window.location.assign("/login");
+
+      await submitData(
+        "POST",
+        endpoint,
+        values,
+        {},
+        alertDesc,
+        setTimeoutFN,
+        3000
       );
 
-      if (searchClient.data.status === "success")
-        ReactDOM.render(
-          <Alert
-            message="Success"
-            description="Please check your email to reset your password!"
-            type="success"
-            showIcon
-          />,
-          document.getElementById("alert")
-        );
-
       setLoading(false);
-
-      setTimeout(() => {
-        window.location.assign("/login");
-      }, 2000);
     } catch (error) {
-      ReactDOM.render(
-        <Alert message={error.response.data.message} type="error" showIcon />,
-        document.getElementById("alert")
-      );
-
-      setLoading(false);
-
-      setTimeout(() => {
-        ReactDOM.render("", document.getElementById("alert"));
-      }, 3000);
+      console.error(error.message);
     }
   };
+
   return (
     <Row align="middle" justify="center" className={classes.RowVH}>
       <Form className={classes.FormSize} onFinish={submitFormData}>
