@@ -12,6 +12,7 @@ const InputBill = ({ value, handleChange }) => {
         <Input
           name="monthlyBill"
           type="number"
+          min="1"
           value={value}
           onChange={handleChange}
           onKeyDown={(e) => {
