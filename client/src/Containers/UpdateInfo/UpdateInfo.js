@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import ReactDOM from "react-dom";
-import axios from "axios";
 import { Form, Row, Button, Typography, Col, Upload, Avatar } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 
 import { useForm } from "../../hooks/useForm";
+import { UserContext } from "../../hooks/useCreateContext";
 import { submitData } from "../../util/submit-data";
 import InputName from "../../Components/Form/InputName/InputName";
 import InputEmail from "../../Components/Form/InputEmail/InputEmail";
@@ -23,8 +23,8 @@ const UpdateInfo = () => {
   });
   const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [client, setClient] = useState({});
   const [form] = Form.useForm();
+  const { client, setClient } = useContext(UserContext);
 
   const submitFormData = async () => {
     try {
@@ -43,7 +43,7 @@ const UpdateInfo = () => {
       fd.append("address", values.address);
       if (selectedFile) fd.append("photo", selectedFile);
 
-      await submitData(
+      const result = await submitData(
         "PATCH",
         endpoint,
         fd,
@@ -53,16 +53,7 @@ const UpdateInfo = () => {
         3000
       );
 
-      if (selectedFile) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const sidebarPhoto = document.getElementById("sidebarclientphoto");
-          sidebarPhoto.getElementsByTagName("img")[0].src = event.target.result;
-        };
-        reader.readAsDataURL(selectedFile);
-      }
-
-      document.getElementById("clientname").innerHTML = values.name;
+      if (result.status === "success") setClient(result.data.client);
 
       setLoading(false);
     } catch (error) {
@@ -90,35 +81,20 @@ const UpdateInfo = () => {
   };
 
   useEffect(() => {
-    const getInfo = async () => {
-      try {
-        const result = await axios.get("/api/v1/view/", {
-          withCredentials: true,
-        });
+    form.setFieldsValue({
+      itemName: client.name,
+      itemEmail: client.email,
+      itemContactNumber: client.contactNumber,
+      itemAddress: client.address,
+    });
 
-        if (result.data.status === "success") {
-          form.setFieldsValue({
-            itemName: result.data.data.client.name,
-            itemEmail: result.data.data.client.email,
-            itemContactNumber: result.data.data.client.contactNumber,
-            itemAddress: result.data.data.client.address,
-          });
-
-          values.name = result.data.data.client.name;
-          values.email = result.data.data.client.email;
-          values.contactNumber = result.data.data.client.contactNumber;
-          values.address = result.data.data.client.address;
-          setClient(result.data.data.client);
-        }
-      } catch (error) {
-        window.location.assign("/login");
-      }
-    };
-
-    getInfo();
+    values.name = client.name;
+    values.email = client.email;
+    values.contactNumber = client.contactNumber;
+    values.address = client.address;
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [client]);
 
   return (
     <Row justify="center" align="middle" className={classes.RowVH}>
