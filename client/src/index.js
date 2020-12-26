@@ -8,7 +8,7 @@ import "antd/dist/antd.css";
 import "./index.css";
 
 // axios.defaults.baseURL = "http://localhost:5000";
-axios.defaults.baseURL = "https://corps-sender.herokuapp.com";
+axios.defaults.baseURL = "https://e-sender.herokuapp.com";
 
 const app = (
   <BrowserRouter>
