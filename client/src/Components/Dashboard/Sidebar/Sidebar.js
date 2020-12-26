@@ -69,7 +69,7 @@ const Sidebar = () => {
       >
         <Col span={6}>
           <Avatar
-            src={`https://corps-sender.herokuapp.com/img/users/${
+            src={`https://e-sender.herokuapp.com/img/users/${
               client.photo ? client.photo : "default.jpg"
             }`}
             alt={client.name && `${client.name} picture`}
