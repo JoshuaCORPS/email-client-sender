@@ -125,7 +125,7 @@ const UpdateInfo = () => {
         {/* For Client Image */}
         <Avatar
           id="clientphoto"
-          src={`https://corps-sender.herokuapp.com/img/users/${
+          src={`https://e-sender.herokuapp.com/img/users/${
             client.photo ? client.photo : "default.jpg"
           }`}
           style={{ marginRight: "1rem" }}
