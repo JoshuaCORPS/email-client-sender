@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import {
   Layout,
@@ -18,11 +19,30 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 
+import { UserContext } from "../../../hooks/useCreateContext";
+
 const { SubMenu } = Menu;
 const { Sider } = Layout;
 const { Title, Text } = Typography;
 
-const Sidebar = ({ client, logoutHandler }) => {
+const logout = async () => {
+  try {
+    const result = await axios.get("/api/v1/auth/logout", {
+      withCredentials: true,
+    });
+    if (result.data.status === "success") {
+      setTimeout(() => {
+        window.location.assign("/login");
+      }, 1000);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const Sidebar = () => {
+  const { client } = useContext(UserContext);
+
   return (
     <Sider
       breakpoint="lg"
@@ -49,7 +69,6 @@ const Sidebar = ({ client, logoutHandler }) => {
       >
         <Col span={6}>
           <Avatar
-            id="sidebarclientphoto"
             src={`https://corps-sender.herokuapp.com/img/users/${
               client.photo ? client.photo : "default.jpg"
             }`}
@@ -58,11 +77,7 @@ const Sidebar = ({ client, logoutHandler }) => {
           />
         </Col>
         <Col>
-          <Title
-            id="clientname"
-            level={2}
-            style={{ color: "white", fontSize: "1.1rem" }}
-          >
+          <Title level={2} style={{ color: "white", fontSize: "1.1rem" }}>
             {client.name}
           </Title>
           <Row justify="center">
@@ -106,7 +121,7 @@ const Sidebar = ({ client, logoutHandler }) => {
 
         <Menu.Item
           icon={<LogoutOutlined />}
-          onClick={logoutHandler}
+          onClick={logout}
           style={{ position: "absolute", bottom: "0" }}
         >
           Log out
