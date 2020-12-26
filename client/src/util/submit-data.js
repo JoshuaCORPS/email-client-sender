@@ -12,14 +12,14 @@ export const submitData = async (
   timeoutSec
 ) => {
   try {
-    const loginClient = await axios({
+    const clientData = await axios({
       method,
       url,
       data,
       ...config,
     });
 
-    if (loginClient.data.status === "success")
+    if (clientData.data.status === "success")
       ReactDOM.render(
         <Alert
           message="Success"
@@ -32,6 +32,8 @@ export const submitData = async (
     setTimeout(() => {
       setTimeoutFN();
     }, timeoutSec);
+
+    return clientData.data;
   } catch (error) {
     ReactDOM.render(
       <Alert message={error.response.data.message} type="error" showIcon />,
