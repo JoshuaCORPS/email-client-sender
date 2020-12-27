@@ -11,6 +11,7 @@ import MailUsers from "./Containers/MailUsers/MailUsers";
 import AddUser from "./Containers/AddUser/AddUser";
 import UpdateInfo from "./Containers/UpdateInfo/UpdateInfo";
 import UpdatePassword from "./Containers/UpdatePassword/UpdatePassword";
+import ManageUsers from "./Containers/ManageUsers/ManageUsers";
 
 const App = () => {
   return (
@@ -34,6 +35,10 @@ const App = () => {
         />
         <Route path="/verify/:token" component={VerifyAccount} />
         <Route path="/reset-password/:token" component={ResetPassword} />
+        <Route
+          path="/users"
+          render={() => <Dashboard content={<ManageUsers />} />}
+        />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/forgot-password" component={ForgotPassword} />
