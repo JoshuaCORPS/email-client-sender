@@ -107,7 +107,9 @@ const Sidebar = () => {
           <Menu.Item>
             <Link to="/users/add-user">Add User</Link>
           </Menu.Item>
-          <Menu.Item>Manage User</Menu.Item>
+          <Menu.Item>
+            <Link to="/users">Manage Users</Link>
+          </Menu.Item>
         </SubMenu>
 
         <SubMenu key="sub3" icon={<SettingOutlined />} title="Account Settings">
