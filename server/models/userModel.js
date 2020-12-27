@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema(
     },
     balance: {
       type: Number,
+      min: [0, 'Balance must be greater than or equal to 0'],
       default: 0,
     },
     client: [
