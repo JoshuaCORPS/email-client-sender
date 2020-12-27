@@ -105,7 +105,16 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 
   if (index === -1) return next(new AppError('user not found', 404));
 
-  const filteredBody = filterObj(req.body, 'name', 'email');
+  const filteredBody = filterObj(
+    req.body,
+    'name',
+    'email',
+    'contactNumber',
+    'address',
+    'monthlyBill',
+    'billDate',
+    'balance'
+  );
 
   const user = await User.findByIdAndUpdate(req.params.userid, filteredBody, {
     new: true,
