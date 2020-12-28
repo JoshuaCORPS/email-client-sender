@@ -49,7 +49,7 @@ const ManageUser = () => {
 
         setClient(clientCopy);
 
-        message.success(`${data.data.user.name} mark as paid!`);
+        message.success(`${data.data.user.name} mark as paid.`);
       }
       setLoading(false);
     } catch (error) {
