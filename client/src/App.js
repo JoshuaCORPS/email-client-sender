@@ -12,11 +12,16 @@ import AddUser from "./Containers/AddUser/AddUser";
 import UpdateInfo from "./Containers/UpdateInfo/UpdateInfo";
 import UpdatePassword from "./Containers/UpdatePassword/UpdatePassword";
 import ManageUsers from "./Containers/ManageUsers/ManageUsers";
+import EditUser from "./Containers/EditUser/EditUser";
 
 const App = () => {
   return (
     <main>
       <Switch>
+        <Route
+          path="/users/:userid/edit"
+          render={() => <Dashboard content={<EditUser />} />}
+        />
         <Route
           path="/mail/mail-users"
           render={() => <Dashboard content={<MailUsers />} />}
