@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
-import { Table, Space, Dropdown, Menu, Button, message } from "antd";
+import { Table, Space, Dropdown, Button, message, Divider } from "antd";
 import {
   CheckCircleTwoTone,
   CloseCircleTwoTone,
@@ -9,13 +9,7 @@ import {
 
 import { UserContext } from "../../hooks/useCreateContext";
 import numberFormatter from "../../util/numberFormatter";
-
-const menu = (
-  <Menu>
-    <Menu.Item key="1">Edit</Menu.Item>
-    <Menu.Item key="2">Delete</Menu.Item>
-  </Menu>
-);
+import DropdownActionMenu from "../../Components/Dashboard/DropdownActionMenu/DropdownActionMenu";
 
 const ManageUser = () => {
   const { client, setClient } = useContext(UserContext);
@@ -28,12 +22,10 @@ const ManageUser = () => {
       ...user,
     }));
 
-  const handlePaid = async (e) => {
+  const handlePaid = async (e, record) => {
     try {
       setLoading(true);
-      const userId = e.target.parentNode.parentNode.parentNode.parentNode.getAttribute(
-        "data-row-key"
-      );
+      const userId = record.id;
       const { data } = await axios.patch(
         `/api/v1/clients/users/${userId}`,
         {
@@ -70,6 +62,7 @@ const ManageUser = () => {
     {
       title: "Name",
       dataIndex: "name",
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: "Email",
@@ -88,6 +81,7 @@ const ManageUser = () => {
     {
       title: "Billing Date",
       dataIndex: "billDate",
+      sorter: (a, b) => new Date(a.billDate) - new Date(b.billDate),
       render: (billDate) => <>{new Date(`${billDate}`).toLocaleDateString()}</>,
     },
     {
@@ -119,13 +113,20 @@ const ManageUser = () => {
     {
       title: "Actions",
       dataIndex: "actions",
-      render: () => (
-        <Space size="middle">
-          <Button type="link" onClick={handlePaid} loading={loading}>
-            <span style={{ pointerEvents: "none" }}>Mark as Paid</span>
+      render: (_, record, _2) => (
+        <Space size="small">
+          <Button
+            type="link"
+            onClick={(e) => handlePaid(e, record)}
+            loading={loading}
+            key={record.id}
+          >
+            Mark as Paid
           </Button>
-          |
-          <Dropdown overlay={menu}>
+
+          <Divider type="vertical" />
+
+          <Dropdown overlay={() => <DropdownActionMenu record={record} />}>
             <Button type="link">
               More <DownOutlined />
             </Button>
