@@ -145,7 +145,7 @@ const EditUser = ({ match }) => {
 
         {/* For Submit Button */}
         <Button type="primary" htmlType="submit" block loading={loading}>
-          Add User
+          Update User
         </Button>
       </Form>
     </Row>
