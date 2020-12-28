@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import ReactDOM from "react-dom";
 import { Form, Row, Button, Typography, Col, Divider } from "antd";
 
 import { useForm } from "../../hooks/useForm";
+import { UserContext } from "../../hooks/useCreateContext";
 import { submitData } from "../../util/submit-data";
 import InputName from "../../Components/Form/InputName/InputName";
 import InputEmail from "../../Components/Form/InputEmail/InputEmail";
@@ -26,6 +27,7 @@ const AddUser = () => {
     billDate: "",
   });
   const [loading, setLoading] = useState(false);
+  const { client, setClient } = useContext(UserContext);
   const [form] = Form.useForm();
 
   const submitFormData = async () => {
@@ -40,7 +42,7 @@ const AddUser = () => {
         form.resetFields();
       };
 
-      await submitData(
+      const result = await submitData(
         "POST",
         endpoint,
         values,
@@ -50,9 +52,17 @@ const AddUser = () => {
         3000
       );
 
+      if (result.status === "success") {
+        const clientCopy = { ...client };
+        clientCopy.users.push(result.data.user);
+
+        setClient(clientCopy);
+      }
+
       setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
