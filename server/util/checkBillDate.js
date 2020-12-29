@@ -1,8 +1,13 @@
-const User = require('../models/userModel');
+const Client = require('../models/clientModel');
 const sendEmail = require('./email');
 
 const checkBillingDate = async () => {
-  const users = await User.find();
+  const clients = await Client.find();
+  const users = [];
+
+  for (let client of clients) {
+    for (let user of client.users) users.push(user);
+  }
   const dateNow = new Date(Date.now());
   const monthNames = [
     'January',
