@@ -1,10 +1,11 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
-import { Table, Space, Dropdown, Button, message, Divider } from "antd";
+import { Table, Space, Dropdown, Button, message, Divider, Input } from "antd";
 import {
   CheckCircleTwoTone,
   CloseCircleTwoTone,
   DownOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 
 import { UserContext } from "../../hooks/useCreateContext";
@@ -13,11 +14,12 @@ import DropdownActionMenu from "../../Components/Dashboard/DropdownActionMenu/Dr
 
 const ManageUser = () => {
   const { client, setClient } = useContext(UserContext);
+  const [clientDisplay, setClientDisplay] = useState(client && client);
   const [loading, setLoading] = useState(false);
 
   const tableData =
-    client.users &&
-    client.users.map((user) => ({
+    clientDisplay.users &&
+    clientDisplay.users.map((user) => ({
       key: user._id,
       ...user,
     }));
@@ -58,6 +60,20 @@ const ManageUser = () => {
     }
   };
 
+  const inputChangeHandler = (e) => {
+    const word = e.target.value;
+    const reg = new RegExp(`\\b${word}`, "i");
+    const clientCopy = { ...client };
+
+    if (word !== "") {
+      const newList = client.users.filter((user) => reg.test(user.name));
+      clientCopy.users = newList;
+      setClientDisplay(clientCopy);
+    } else {
+      setClientDisplay(client);
+    }
+  };
+
   const columns = [
     {
       title: "Name",
@@ -67,26 +83,31 @@ const ManageUser = () => {
     {
       title: "Email",
       dataIndex: "email",
+      responsive: ["md"],
     },
     {
       title: "Contact Number",
       dataIndex: "contactNumber",
+      responsive: ["md"],
     },
     {
       title: "Monthly Bill",
       dataIndex: "monthlyBill",
+      responsive: ["md"],
       sorter: (a, b) => a.monthlyBill - b.monthlyBill,
       render: (monthlyBill) => <>{`₱${numberFormatter(monthlyBill)}`}</>,
     },
     {
       title: "Billing Date",
       dataIndex: "billDate",
+      responsive: ["md"],
       sorter: (a, b) => new Date(a.billDate) - new Date(b.billDate),
       render: (billDate) => <>{new Date(`${billDate}`).toLocaleDateString()}</>,
     },
     {
       title: "Paid",
       dataIndex: "paid",
+      responsive: ["md"],
       sorter: (a, b) => a.paid - b.paid,
       render: (paid) => (
         <>
@@ -107,6 +128,7 @@ const ManageUser = () => {
     {
       title: "Balance",
       dataIndex: "balance",
+      responsive: ["md"],
       sorter: (a, b) => a.balance - b.balance,
       render: (balance) => <>{`₱${numberFormatter(balance)}`}</>,
     },
@@ -120,6 +142,7 @@ const ManageUser = () => {
             onClick={(e) => handlePaid(e, record)}
             loading={loading}
             key={record.id}
+            style={{ padding: 0 }}
           >
             Mark as Paid
           </Button>
@@ -127,7 +150,7 @@ const ManageUser = () => {
           <Divider type="vertical" />
 
           <Dropdown overlay={() => <DropdownActionMenu record={record} />}>
-            <Button type="link">
+            <Button type="link" style={{ padding: 0 }}>
               More <DownOutlined />
             </Button>
           </Dropdown>
@@ -140,7 +163,19 @@ const ManageUser = () => {
 
   return (
     <>
-      <Table columns={tableColumns} dataSource={tableData} bordered></Table>
+      <Input.Search
+        style={{ marginBottom: "20px", width: "25%", float: "right" }}
+        placeholder="Name"
+        prefix={<UserOutlined />}
+        allowClear
+        onChange={inputChangeHandler}
+      />
+      <Table
+        columns={tableColumns}
+        dataSource={tableData}
+        bordered
+        style={{ width: "100%" }}
+      ></Table>
     </>
   );
 };
