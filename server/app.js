@@ -76,7 +76,7 @@ app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 });
 
-schedule.scheduleJob('*/10 * * * *', async () => {
+schedule.scheduleJob('*/5 * * * *', async () => {
   await checkBillingDate();
 });
 
