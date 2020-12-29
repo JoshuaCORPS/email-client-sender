@@ -140,6 +140,8 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
 
   await client.save({ validateBeforeSave: false });
 
+  await User.findByIdAndDelete(req.params.userid);
+
   res.status(204).json({
     message: 'success',
     data: null,
