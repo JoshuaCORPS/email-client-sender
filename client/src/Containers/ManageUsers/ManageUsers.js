@@ -17,9 +17,16 @@ const ManageUser = () => {
   const [clientDisplay, setClientDisplay] = useState(client && client);
   const [loading, setLoading] = useState(false);
 
-  const tableData =
+  const tableDataFromClientState =
     clientDisplay.users &&
     clientDisplay.users.map((user) => ({
+      key: user._id,
+      ...user,
+    }));
+
+  const tableDataFromClientContext =
+    client.users &&
+    client.users.map((user) => ({
       key: user._id,
       ...user,
     }));
@@ -172,7 +179,7 @@ const ManageUser = () => {
       />
       <Table
         columns={tableColumns}
-        dataSource={tableData}
+        dataSource={tableDataFromClientState || tableDataFromClientContext}
         bordered
         style={{ width: "100%" }}
       ></Table>
