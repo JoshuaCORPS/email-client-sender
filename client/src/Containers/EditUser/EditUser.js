@@ -75,26 +75,30 @@ const EditUser = ({ match }) => {
   };
 
   useEffect(() => {
-    form.setFieldsValue({
-      itemName: client.users && client.users[currentUser].name,
-      itemEmail: client.users && client.users[currentUser].email,
-      itemContactNumber:
-        client.users && client.users[currentUser].contactNumber,
-      itemAddress: client.users && client.users[currentUser].address,
-      itemBill: client.users && client.users[currentUser].monthlyBill,
-      itemBalance: client.users && client.users[currentUser].balance,
-      itemDate: client.users && moment(client.users[currentUser].billDate),
-    });
+    if (currentUser !== -1) {
+      form.setFieldsValue({
+        itemName: client.users && client.users[currentUser].name,
+        itemEmail: client.users && client.users[currentUser].email,
+        itemContactNumber:
+          client.users && client.users[currentUser].contactNumber,
+        itemAddress: client.users && client.users[currentUser].address,
+        itemBill: client.users && client.users[currentUser].monthlyBill,
+        itemBalance: client.users && client.users[currentUser].balance,
+        itemDate: client.users && moment(client.users[currentUser].billDate),
+      });
 
-    values.name = client.users && client.users[currentUser].name;
-    values.email = client.users && client.users[currentUser].email;
-    values.contactNumber =
-      client.users && client.users[currentUser].contactNumber;
-    values.address = client.users && client.users[currentUser].address;
-    values.monthlyBill = client.users && client.users[currentUser].monthlyBill;
-    values.balance = client.users && client.users[currentUser].balance;
-    values.billDate = client.users && client.users[currentUser].billDate;
-
+      values.name = client.users && client.users[currentUser].name;
+      values.email = client.users && client.users[currentUser].email;
+      values.contactNumber =
+        client.users && client.users[currentUser].contactNumber;
+      values.address = client.users && client.users[currentUser].address;
+      values.monthlyBill =
+        client.users && client.users[currentUser].monthlyBill;
+      values.balance = client.users && client.users[currentUser].balance;
+      values.billDate = client.users && client.users[currentUser].billDate;
+    } else {
+      window.location.assign("/users");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [client]);
 
