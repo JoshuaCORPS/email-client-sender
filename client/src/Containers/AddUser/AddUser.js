@@ -38,7 +38,8 @@ const AddUser = () => {
       const alertDesc = "User successfully added!";
       const options = { withCredentials: true };
       const setTimeoutFN = () => {
-        ReactDOM.render("", document.getElementById("alert"));
+        if (document.getElementById("alert"))
+          ReactDOM.render("", document.getElementById("alert"));
         form.resetFields();
       };
 
@@ -52,7 +53,7 @@ const AddUser = () => {
         3000
       );
 
-      if (result.status === "success") {
+      if (result && result.status === "success") {
         const clientCopy = { ...client };
         clientCopy.users.push(result.data.user);
 
