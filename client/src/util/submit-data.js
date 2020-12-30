@@ -29,6 +29,7 @@ export const submitData = async (
         />,
         document.getElementById("alert")
       );
+
     setTimeout(() => {
       setTimeoutFN();
     }, timeoutSec);
@@ -41,7 +42,8 @@ export const submitData = async (
     );
 
     setTimeout(() => {
-      ReactDOM.render("", document.getElementById("alert"));
+      if (document.getElementById("alert"))
+        ReactDOM.render("", document.getElementById("alert"));
     }, 3000);
   }
 };
