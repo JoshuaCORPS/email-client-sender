@@ -10,7 +10,7 @@ import Sidebar from "../../Components/Dashboard/Sidebar/Sidebar";
 
 const { Content, Header } = Layout;
 
-const Dashboard = ({ content }) => {
+const Dashboard = ({ content, defaultOpenSub, defaultKey }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [client, setClient] = useState({});
 
@@ -39,7 +39,7 @@ const Dashboard = ({ content }) => {
       <UserContext.Provider value={{ client, setClient }}>
         <Layout>
           {/* Sidebar */}
-          <Sidebar />
+          <Sidebar defaultOpenSub={defaultOpenSub} defaultKey={defaultKey} />
 
           <Layout style={{ position: "relative" }}>
             {/* Header */}
