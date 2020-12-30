@@ -40,7 +40,7 @@ const logout = async () => {
   }
 };
 
-const Sidebar = () => {
+const Sidebar = ({ defaultOpenSub, defaultKey }) => {
   const { client } = useContext(UserContext);
 
   return (
@@ -91,32 +91,37 @@ const Sidebar = () => {
       </Row>
 
       {/* Menu */}
-      <Menu mode="inline" theme="dark" defaultSelectedKeys={["1"]}>
+      <Menu
+        mode="inline"
+        theme="dark"
+        defaultOpenKeys={[`${defaultOpenSub}`]}
+        defaultSelectedKeys={[`${defaultKey}`]}
+      >
         <Menu.Item key="1" icon={<DashboardOutlined />}>
           <Link to="/">Dashboard</Link>
         </Menu.Item>
 
         <SubMenu key="sub1" icon={<MailOutlined />} title="Mail">
-          <Menu.Item>
+          <Menu.Item key="2">
             <Link to="/mail/mail-users">Mail Users</Link>
           </Menu.Item>
           {/* <Menu.Item>Send to Single User</Menu.Item> */}
         </SubMenu>
 
         <SubMenu key="sub2" icon={<UsergroupAddOutlined />} title="Users">
-          <Menu.Item>
+          <Menu.Item key="3">
             <Link to="/users/add-user">Add User</Link>
           </Menu.Item>
-          <Menu.Item>
+          <Menu.Item key="4">
             <Link to="/users">Manage Users</Link>
           </Menu.Item>
         </SubMenu>
 
         <SubMenu key="sub3" icon={<SettingOutlined />} title="Account Settings">
-          <Menu.Item>
+          <Menu.Item key="5">
             <Link to="/account/update-info">Update Information</Link>
           </Menu.Item>
-          <Menu.Item>
+          <Menu.Item key="6">
             <Link to="/account/update-password">Update Password</Link>
           </Menu.Item>
         </SubMenu>
