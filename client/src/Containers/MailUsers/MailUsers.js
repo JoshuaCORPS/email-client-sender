@@ -23,7 +23,8 @@ const MailUsers = () => {
       const alertDesc = "Mail successfully sent!";
       const options = { withCredentials: true };
       const setTimeoutFN = () => {
-        ReactDOM.render("", document.getElementById("alert"));
+        if (document.getElementById("alert"))
+          ReactDOM.render("", document.getElementById("alert"));
         form.resetFields();
       };
 
