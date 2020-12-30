@@ -43,13 +43,7 @@ const Dashboard = ({ content }) => {
 
           <Layout>
             {/* Header */}
-            <Header>
-              {/* <Menu theme="dark" mode="horizontal">
-            <Menu.Item key="1">{client.name}</Menu.Item>
-            <Menu.Item key="2">{client.email}</Menu.Item>
-            <Menu.Item key="3">{client.role}</Menu.Item>
-          </Menu> */}
-            </Header>
+            <Header></Header>
 
             {/* Content */}
             <Content style={{ margin: "24px 16px 0" }}>{content}</Content>
