@@ -44,7 +44,8 @@ const EditUser = ({ match }) => {
       const alertDesc = "User successfully updated!";
       const options = { withCredentials: true };
       const setTimeoutFN = () => {
-        ReactDOM.render("", document.getElementById("alert"));
+        if (document.getElementById("alert"))
+          ReactDOM.render("", document.getElementById("alert"));
       };
 
       await submitData(
