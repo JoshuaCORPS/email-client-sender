@@ -20,36 +20,74 @@ const App = () => {
       <Switch>
         <Route
           path="/users/:userid/edit"
-          render={() => <Dashboard content={<EditUser />} />}
+          render={() => (
+            <Dashboard
+              defaultOpenSub="sub2"
+              defaultKey="4"
+              content={<EditUser />}
+            />
+          )}
         />
         <Route
           path="/mail/mail-users"
-          render={() => <Dashboard content={<MailUsers />} />}
+          render={() => (
+            <Dashboard
+              defaultOpenSub="sub1"
+              defaultKey="2"
+              content={<MailUsers />}
+            />
+          )}
         />
         <Route
           path="/users/add-user"
-          render={() => <Dashboard content={<AddUser />} />}
+          render={() => (
+            <Dashboard
+              defaultOpenSub="sub2"
+              defaultKey="3"
+              content={<AddUser />}
+            />
+          )}
         />
         <Route
           path="/account/update-info"
-          render={() => <Dashboard content={<UpdateInfo />} />}
+          render={() => (
+            <Dashboard
+              defaultOpenSub="sub3"
+              defaultKey="5"
+              content={<UpdateInfo />}
+            />
+          )}
         />
         <Route
           path="/account/update-password"
-          render={() => <Dashboard content={<UpdatePassword />} />}
+          render={() => (
+            <Dashboard
+              defaultOpenSub="sub3"
+              defaultKey="6"
+              content={<UpdatePassword />}
+            />
+          )}
         />
         <Route path="/verify/:token" component={VerifyAccount} />
         <Route path="/reset-password/:token" component={ResetPassword} />
         <Route
           path="/users"
-          render={() => <Dashboard content={<ManageUsers />} />}
+          render={() => (
+            <Dashboard
+              defaultOpenSub="sub2"
+              defaultKey="4"
+              content={<ManageUsers />}
+            />
+          )}
         />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/forgot-password" component={ForgotPassword} />
         <Route
           path="/"
-          render={() => <Dashboard content={<h3>Dashboard</h3>} />}
+          render={() => (
+            <Dashboard defaultKey="1" content={<h3>Dashboard</h3>} />
+          )}
         />
       </Switch>
     </main>
