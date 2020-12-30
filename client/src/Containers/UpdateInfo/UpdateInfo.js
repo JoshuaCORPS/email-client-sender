@@ -33,8 +33,10 @@ const UpdateInfo = () => {
       const endpoint = "/api/v1/auth/update-info";
       const alertDesc = "Your info has been updated!";
       const options = { withCredentials: true };
-      const setTimeoutFN = () =>
-        ReactDOM.render("", document.getElementById("alert"));
+      const setTimeoutFN = () => {
+        if (document.getElementById("alert"))
+          ReactDOM.render("", document.getElementById("alert"));
+      };
 
       const fd = new FormData();
       fd.append("name", values.name);
@@ -53,7 +55,7 @@ const UpdateInfo = () => {
         3000
       );
 
-      if (result.status === "success") setClient(result.data.client);
+      if (result && result.status === "success") setClient(result.data.client);
 
       setLoading(false);
     } catch (error) {
