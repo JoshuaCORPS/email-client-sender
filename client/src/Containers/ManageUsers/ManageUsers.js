@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { Table, Space, Dropdown, Button, message, Divider, Input } from "antd";
 import {
@@ -14,19 +14,12 @@ import DropdownActionMenu from "../../Components/Dashboard/DropdownActionMenu/Dr
 
 const ManageUser = () => {
   const { client, setClient } = useContext(UserContext);
-  const [clientDisplay, setClientDisplay] = useState(client && client);
+  const [clientDisplay, setClientDisplay] = useState({});
   const [loading, setLoading] = useState(false);
 
   const tableDataFromClientState =
     clientDisplay.users &&
     clientDisplay.users.map((user) => ({
-      key: user._id,
-      ...user,
-    }));
-
-  const tableDataFromClientContext =
-    client.users &&
-    client.users.map((user) => ({
       key: user._id,
       ...user,
     }));
@@ -166,6 +159,10 @@ const ManageUser = () => {
     },
   ];
 
+  useEffect(() => {
+    setClientDisplay(client);
+  }, [client]);
+
   const tableColumns = columns.map((item) => ({ ...item }));
 
   return (
@@ -179,7 +176,7 @@ const ManageUser = () => {
       />
       <Table
         columns={tableColumns}
-        dataSource={tableDataFromClientState || tableDataFromClientContext}
+        dataSource={tableDataFromClientState}
         bordered
         style={{ width: "100%" }}
       ></Table>
