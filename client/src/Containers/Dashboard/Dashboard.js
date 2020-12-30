@@ -41,7 +41,7 @@ const Dashboard = ({ content }) => {
           {/* Sidebar */}
           <Sidebar />
 
-          <Layout>
+          <Layout style={{ position: "relative" }}>
             {/* Header */}
             <Header></Header>
 
@@ -49,9 +49,11 @@ const Dashboard = ({ content }) => {
             <Content style={{ margin: "24px 16px 0" }}>{content}</Content>
             <Footer
               style={{
-                left: "50%",
                 position: "absolute",
                 bottom: "0",
+                left: "0",
+                right: "0",
+                textAlign: "center",
               }}
             >
               © CORPS. All Rights Reserved
