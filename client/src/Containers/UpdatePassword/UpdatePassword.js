@@ -29,7 +29,8 @@ const UpdatePassword = () => {
       const alertDesc = "Your password has been updated!";
       const options = { withCredentials: true };
       const setTimeoutFN = () => {
-        ReactDOM.render("", document.getElementById("alert"));
+        if (document.getElementById("alert"))
+          ReactDOM.render("", document.getElementById("alert"));
         form.resetFields();
       };
 
