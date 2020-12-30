@@ -47,7 +47,13 @@ const Dashboard = ({ content }) => {
 
             {/* Content */}
             <Content style={{ margin: "24px 16px 0" }}>{content}</Content>
-            <Footer style={{ textAlign: "center" }}>
+            <Footer
+              style={{
+                left: "50%",
+                position: "absolute",
+                bottom: "0",
+              }}
+            >
               © CORPS. All Rights Reserved
             </Footer>
 
