@@ -1,0 +1,26 @@
+.SidebarHeight {
+  height: 100vh;
+}
+
+.DividerColor {
+  background-color: #ccc;
+  margin-top: 5px;
+}
+
+.RowMargin {
+  margin: 20px 10px;
+}
+
+.NameColor {
+  color: white !important;
+  font-size: 1.1rem !important;
+}
+
+.RoleColor {
+  color: white !important;
+}
+
+.LogoutBtn {
+  position: absolute !important;
+  bottom: 0;
+}
