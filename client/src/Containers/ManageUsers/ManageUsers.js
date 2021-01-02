@@ -11,6 +11,7 @@ import {
 import { UserContext } from "../../hooks/useCreateContext";
 import numberFormatter from "../../util/numberFormatter";
 import DropdownActionMenu from "../../Components/Dashboard/DropdownActionMenu/DropdownActionMenu";
+import classes from "./ManageUsers.module.css";
 
 const ManageUser = () => {
   const { client, setClient } = useContext(UserContext);
@@ -113,12 +114,12 @@ const ManageUser = () => {
         <>
           {paid === true ? (
             <CheckCircleTwoTone
-              style={{ fontSize: "1.3rem" }}
+              className={classes.PaidIconSize}
               twoToneColor="#52c41a"
             />
           ) : (
             <CloseCircleTwoTone
-              style={{ fontSize: "1.3rem" }}
+              className={classes.PaidIconSize}
               twoToneColor="#D42322"
             />
           )}
@@ -138,11 +139,11 @@ const ManageUser = () => {
       render: (_, record, _2) => (
         <Space size="small">
           <Button
+            className={classes.ActionCol}
             type="link"
             onClick={(e) => handlePaid(e, record)}
             loading={loading}
             key={record.id}
-            style={{ padding: 0 }}
           >
             Mark as Paid
           </Button>
@@ -150,7 +151,7 @@ const ManageUser = () => {
           <Divider type="vertical" />
 
           <Dropdown overlay={() => <DropdownActionMenu record={record} />}>
-            <Button type="link" style={{ padding: 0 }}>
+            <Button className={classes.ActionMoreBtn} type="link">
               More <DownOutlined />
             </Button>
           </Dropdown>
@@ -168,17 +169,17 @@ const ManageUser = () => {
   return (
     <>
       <Input.Search
-        style={{ marginBottom: "20px", width: "25%", float: "right" }}
+        className={classes.SearchInput}
         placeholder="Name"
         prefix={<UserOutlined />}
         allowClear
         onChange={inputChangeHandler}
       />
       <Table
+        className={classes.TableSize}
         columns={tableColumns}
         dataSource={tableDataFromClientState}
         bordered
-        style={{ width: "100%" }}
       ></Table>
     </>
   );
