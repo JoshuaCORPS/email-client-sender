@@ -1,0 +1,15 @@
+.LayoutPosition {
+  position: relative;
+}
+
+.ContentMargin {
+  margin: 24px 16px 0;
+}
+
+.FooterPostion {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
