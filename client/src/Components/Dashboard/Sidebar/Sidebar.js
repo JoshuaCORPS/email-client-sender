@@ -20,6 +20,7 @@ import {
 } from "@ant-design/icons";
 
 import { UserContext } from "../../../hooks/useCreateContext";
+import classes from "./Sidebar.module.css";
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;
@@ -44,13 +45,7 @@ const Sidebar = ({ defaultOpenSub, defaultKey }) => {
   const { client } = useContext(UserContext);
 
   return (
-    <Sider
-      breakpoint="lg"
-      collapsedWidth="0"
-      style={{
-        height: "100vh",
-      }}
-    >
+    <Sider className={classes.SidebarHeight} breakpoint="lg" collapsedWidth="0">
       {/* Company Logo */}
       <Image
         src="https://www.nasa.gov/sites/default/files/thumbnails/image/nasa-logo-web-rgb.png"
@@ -59,14 +54,10 @@ const Sidebar = ({ defaultOpenSub, defaultKey }) => {
       />
 
       {/* Divider */}
-      <Divider style={{ backgroundColor: "#ccc", marginTop: "5px" }} />
+      <Divider className={classes.DividerColor} />
 
       {/* User Info */}
-      <Row
-        justify="space-between"
-        align="middle"
-        style={{ margin: "20px 10px" }}
-      >
+      <Row className={classes.RowMargin} justify="space-between" align="middle">
         <Col span={6}>
           <Avatar
             src={`https://e-sender.herokuapp.com/img/users/${
@@ -77,12 +68,12 @@ const Sidebar = ({ defaultOpenSub, defaultKey }) => {
           />
         </Col>
         <Col>
-          <Title level={2} style={{ color: "white", fontSize: "1.1rem" }}>
+          <Title className={classes.NameColor} level={2}>
             {client.name}
           </Title>
           <Row justify="center">
             <Col>
-              <Text type="secondary" style={{ color: "white" }}>
+              <Text className={classes.RoleColor} type="secondary">
                 {client.role && client.role.toUpperCase()}
               </Text>
             </Col>
@@ -127,9 +118,9 @@ const Sidebar = ({ defaultOpenSub, defaultKey }) => {
         </SubMenu>
 
         <Menu.Item
+          className={classes.LogoutBtn}
           icon={<LogoutOutlined />}
           onClick={logout}
-          style={{ position: "absolute", bottom: "0" }}
         >
           Log out
         </Menu.Item>
