@@ -60,6 +60,7 @@ const clientSchema = new mongoose.Schema({
     type: String,
     default: 'default.jpg',
   },
+  billCategories: [String],
   emailVerifyToken: String,
   passwordResetToken: String,
   passwordResetExpires: String,
