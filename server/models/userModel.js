@@ -37,6 +37,13 @@ const userSchema = new mongoose.Schema(
       min: [0, 'Balance must be greater than or equal to 0'],
       default: 0,
     },
+    billCategory: {
+      type: String,
+      required: [
+        true,
+        'Please provide a category for the billing of this user',
+      ],
+    },
     client: [
       {
         type: mongoose.Schema.ObjectId,
