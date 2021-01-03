@@ -22,7 +22,8 @@ exports.addUser = catchAsync(async (req, res, next) => {
     'contactNumber',
     'address',
     'monthlyBill',
-    'billDate'
+    'billDate',
+    'billCategory'
   );
 
   if (req.body.balance) filteredBody.balance = req.body.balance;
