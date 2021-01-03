@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { Menu, message } from "antd";
+import { Menu, Popconfirm, message } from "antd";
 import { UserContext } from "../../../hooks/useCreateContext";
 
 const DropdownActionMenu = ({ record }) => {
@@ -33,8 +33,16 @@ const DropdownActionMenu = ({ record }) => {
       <Menu.Item key="1">
         <Link to={`users/${record.id}/edit`}>Edit</Link>
       </Menu.Item>
-      <Menu.Item key="2" onClick={handleDelete}>
-        Delete
+
+      <Menu.Item key="2">
+        <Popconfirm
+          title="Are you sure you want to delete this user?"
+          okText="Yes"
+          cancelText="No"
+          onConfirm={handleDelete}
+        >
+          Delete
+        </Popconfirm>
       </Menu.Item>
     </Menu>
   );
