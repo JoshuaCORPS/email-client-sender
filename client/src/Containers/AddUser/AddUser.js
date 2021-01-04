@@ -12,6 +12,7 @@ import InputAddress from "../../Components/Form/InputAddress/InputAddress";
 import InputBill from "../../Components/Form/InputBill/InputBill";
 import InputBalance from "../../Components/Form/InputBalance/InputBalance";
 import InputDate from "../../Components/Form/InputDate/InputDate";
+import InputDropdownCategory from "../../Components/Form/InputDropdownCategory/InputDropdownCategory";
 import classes from "./AddUser.module.css";
 
 const { Title } = Typography;
@@ -25,6 +26,7 @@ const AddUser = () => {
     monthlyBill: "",
     balance: "0",
     billDate: "",
+    billCategory: "",
   });
   const [loading, setLoading] = useState(false);
   const { client, setClient } = useContext(UserContext);
@@ -62,7 +64,7 @@ const AddUser = () => {
 
       setLoading(false);
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
       setLoading(false);
     }
   };
@@ -107,6 +109,12 @@ const AddUser = () => {
         <InputDate
           value={values.billDate}
           handleChange={(_, dateString) => (values.billDate = dateString)}
+        />
+
+        {/* For Billing Category */}
+        <InputDropdownCategory
+          value={values.billCategory}
+          handleChange={(value) => (values.billCategory = value)}
         />
 
         {/* For Alert */}
