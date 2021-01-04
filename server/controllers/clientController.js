@@ -114,7 +114,8 @@ exports.updateUser = catchAsync(async (req, res, next) => {
     'address',
     'monthlyBill',
     'billDate',
-    'balance'
+    'balance',
+    'billCategory'
   );
 
   const user = await User.findByIdAndUpdate(req.params.userid, filteredBody, {
