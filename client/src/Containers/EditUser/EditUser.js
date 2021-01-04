@@ -14,6 +14,7 @@ import InputAddress from "../../Components/Form/InputAddress/InputAddress";
 import InputBill from "../../Components/Form/InputBill/InputBill";
 import InputBalance from "../../Components/Form/InputBalance/InputBalance";
 import InputDate from "../../Components/Form/InputDate/InputDate";
+import InputDropdownCategory from "../../Components/Form/InputDropdownCategory/InputDropdownCategory";
 import classes from "./EditUser.module.css";
 
 const { Title } = Typography;
@@ -27,6 +28,7 @@ const EditUser = ({ match }) => {
     monthlyBill: "",
     balance: "0",
     billDate: "",
+    billCategory: "",
   });
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
@@ -71,7 +73,8 @@ const EditUser = ({ match }) => {
 
       setLoading(false);
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+      setLoading(false);
     }
   };
 
@@ -86,6 +89,7 @@ const EditUser = ({ match }) => {
         itemBill: client.users && client.users[currentUser].monthlyBill,
         itemBalance: client.users && client.users[currentUser].balance,
         itemDate: client.users && moment(client.users[currentUser].billDate),
+        itemDdCategory: client.users && client.users[currentUser].billCategory,
       });
 
       values.name = client.users && client.users[currentUser].name;
@@ -97,6 +101,8 @@ const EditUser = ({ match }) => {
         client.users && client.users[currentUser].monthlyBill;
       values.balance = client.users && client.users[currentUser].balance;
       values.billDate = client.users && client.users[currentUser].billDate;
+      values.billCategory =
+        client.users && client.users[currentUser].billCategory;
     } else {
       window.location.assign("/users");
     }
@@ -141,8 +147,13 @@ const EditUser = ({ match }) => {
 
         {/* For Billing Date */}
         <InputDate
-          value={values.billDate && values.billDate}
+          value={values.billDate}
           handleChange={(_, dateString) => (values.billDate = dateString)}
+        />
+
+        <InputDropdownCategory
+          value={values.billCategory}
+          handleChange={(value) => (values.billCategory = value)}
         />
 
         {/* For Alert */}
