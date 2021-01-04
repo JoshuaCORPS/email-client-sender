@@ -13,6 +13,8 @@ import UpdateInfo from "./Containers/UpdateInfo/UpdateInfo";
 import UpdatePassword from "./Containers/UpdatePassword/UpdatePassword";
 import ManageUsers from "./Containers/ManageUsers/ManageUsers";
 import EditUser from "./Containers/EditUser/EditUser";
+import AddCategory from "./Containers/AddCategory/AddCategory";
+import ManageCategories from "./Containers/ManageCategories/ManageCategories";
 
 const App = () => {
   return (
@@ -49,11 +51,21 @@ const App = () => {
           )}
         />
         <Route
-          path="/account/update-info"
+          path="/categories/add-category"
           render={() => (
             <Dashboard
               defaultOpenSub="sub3"
               defaultKey="5"
+              content={<AddCategory />}
+            />
+          )}
+        />
+        <Route
+          path="/account/update-info"
+          render={() => (
+            <Dashboard
+              defaultOpenSub="sub4"
+              defaultKey="7"
               content={<UpdateInfo />}
             />
           )}
@@ -62,8 +74,8 @@ const App = () => {
           path="/account/update-password"
           render={() => (
             <Dashboard
-              defaultOpenSub="sub3"
-              defaultKey="6"
+              defaultOpenSub="sub4"
+              defaultKey="8"
               content={<UpdatePassword />}
             />
           )}
@@ -77,6 +89,16 @@ const App = () => {
               defaultOpenSub="sub2"
               defaultKey="4"
               content={<ManageUsers />}
+            />
+          )}
+        />
+        <Route
+          path="/categories"
+          render={() => (
+            <Dashboard
+              defaultOpenSub="sub3"
+              defaultKey="6"
+              content={<ManageCategories />}
             />
           )}
         />
