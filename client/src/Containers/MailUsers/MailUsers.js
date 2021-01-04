@@ -41,6 +41,7 @@ const MailUsers = () => {
       setLoading(false);
     } catch (error) {
       console.error(error.message);
+      setLoading(false);
     }
   };
 
