@@ -28,6 +28,7 @@ const ManageUser = () => {
   const handlePaid = async (e, record) => {
     try {
       setLoading(true);
+
       const userId = record.id;
       const { data } = await axios.patch(
         `/api/v1/clients/users/${userId}`,
@@ -84,31 +85,26 @@ const ManageUser = () => {
     {
       title: "Email",
       dataIndex: "email",
-      responsive: ["md"],
     },
     {
       title: "Contact Number",
       dataIndex: "contactNumber",
-      responsive: ["md"],
     },
     {
       title: "Monthly Bill",
       dataIndex: "monthlyBill",
-      responsive: ["md"],
       sorter: (a, b) => a.monthlyBill - b.monthlyBill,
       render: (monthlyBill) => <>{`₱${numberFormatter(monthlyBill)}`}</>,
     },
     {
       title: "Billing Date",
       dataIndex: "billDate",
-      responsive: ["md"],
       sorter: (a, b) => new Date(a.billDate) - new Date(b.billDate),
       render: (billDate) => <>{new Date(`${billDate}`).toLocaleDateString()}</>,
     },
     {
       title: "Paid",
       dataIndex: "paid",
-      responsive: ["md"],
       sorter: (a, b) => a.paid - b.paid,
       render: (paid) => (
         <>
@@ -129,9 +125,19 @@ const ManageUser = () => {
     {
       title: "Balance",
       dataIndex: "balance",
-      responsive: ["md"],
       sorter: (a, b) => a.balance - b.balance,
       render: (balance) => <>{`₱${numberFormatter(balance)}`}</>,
+    },
+    {
+      title: "Category",
+      dataIndex: "billCategory",
+      filters:
+        client.billCategories &&
+        client.billCategories.map((category) => ({
+          text: category.value,
+          value: category.value,
+        })),
+      onFilter: (value, record) => record.billCategory.indexOf(value) === 0,
     },
     {
       title: "Actions",
@@ -180,7 +186,8 @@ const ManageUser = () => {
         columns={tableColumns}
         dataSource={tableDataFromClientState}
         bordered
-      ></Table>
+        scroll={{ x: "100vw" }}
+      />
     </>
   );
 };
