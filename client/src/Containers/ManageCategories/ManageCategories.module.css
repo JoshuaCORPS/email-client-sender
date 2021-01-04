@@ -1,0 +1,21 @@
+.PaidIconSize {
+  font-size: 1.3rem;
+}
+
+.ActionCol {
+  padding: 0;
+}
+
+.ActionMoreBtn {
+  padding: 0;
+}
+
+.SearchInput {
+  margin-bottom: 20px;
+  width: 35% !important;
+  float: right;
+}
+
+.TableSize {
+  width: 100%;
+}
