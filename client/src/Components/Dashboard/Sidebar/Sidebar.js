@@ -17,6 +17,7 @@ import {
   UsergroupAddOutlined,
   LogoutOutlined,
   SettingOutlined,
+  TableOutlined,
 } from "@ant-design/icons";
 
 import { UserContext } from "../../../hooks/useCreateContext";
@@ -108,11 +109,20 @@ const Sidebar = ({ defaultOpenSub, defaultKey }) => {
           </Menu.Item>
         </SubMenu>
 
-        <SubMenu key="sub3" icon={<SettingOutlined />} title="Account Settings">
+        <SubMenu key="sub3" icon={<TableOutlined />} title="Categories">
           <Menu.Item key="5">
-            <Link to="/account/update-info">Update Information</Link>
+            <Link to="/categories/add-category">Add Category</Link>
           </Menu.Item>
           <Menu.Item key="6">
+            <Link to="/categories">Manage Categories</Link>
+          </Menu.Item>
+        </SubMenu>
+
+        <SubMenu key="sub4" icon={<SettingOutlined />} title="Account Settings">
+          <Menu.Item key="7">
+            <Link to="/account/update-info">Update Information</Link>
+          </Menu.Item>
+          <Menu.Item key="8">
             <Link to="/account/update-password">Update Password</Link>
           </Menu.Item>
         </SubMenu>
