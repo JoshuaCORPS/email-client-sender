@@ -117,6 +117,18 @@ exports.updateUser = catchAsync(async (req, res, next) => {
   if (req.body.contactNumber && !req.body.contactNumber.startsWith('09'))
     return next(new AppError("Contact number must start with '09...'", 400));
 
+  if (client.users[index].billCategory !== req.body.billCategory)
+    if (
+      client.users.some(
+        (user) =>
+          user.email === req.body.email &&
+          user.billCategory === req.body.billCategory
+      )
+    )
+      return next(
+        new AppError('This user already exist in this billing category!', 400)
+      );
+
   const filteredBody = filterObj(
     req.body,
     'name',
