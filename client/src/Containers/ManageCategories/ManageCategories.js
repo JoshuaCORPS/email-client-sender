@@ -1,5 +1,15 @@
-import React, { useContext } from "react";
-import { Table, Space, Button, Divider, Input, Popconfirm } from "antd";
+import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import {
+  Table,
+  Space,
+  Button,
+  Divider,
+  Input,
+  Popconfirm,
+  message,
+} from "antd";
 import {
   TableOutlined,
   CheckCircleTwoTone,
@@ -11,34 +21,80 @@ import numberFormatter from "../../util/numberFormatter";
 import classes from "./ManageCategories.module.css";
 
 const ManageCategories = () => {
-  const { client } = useContext(UserContext);
+  const { client, setClient } = useContext(UserContext);
+  const [clientCategories, setClientCategories] = useState({});
 
   const tableData =
-    client.billCategories &&
-    client.billCategories.map((category) => ({
+    clientCategories.billCategories &&
+    clientCategories.billCategories.map((category) => ({
       key: category.slug,
       category: category.value,
-      users:
-        client.users &&
-        client.users.filter((user) => user.billCategory === category.value),
+      users: client.users.filter(
+        (user) =>
+          user.billCategory &&
+          user.billCategory.toLowerCase() === category.value.toLowerCase()
+      ),
     }));
+
+  const handleDelete = async (record) => {
+    try {
+      const slug = record.key;
+
+      await axios.delete(`/api/v1/clients/categories/${slug}`, {
+        withCredentials: true,
+      });
+
+      const filteredCategory = client.billCategories.filter(
+        (category) => category.slug !== slug
+      );
+
+      const clientCopy = { ...client };
+      clientCopy.billCategories = filteredCategory;
+
+      setClient(clientCopy);
+
+      message.success(`Category ${record.category} deleted`);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const inputChangeHandler = (e) => {
+    const word = e.target.value;
+    const reg = new RegExp(`\\b${word}`, "i");
+    const clientCopy = { ...client };
+
+    if (word !== "") {
+      const newList = client.billCategories.filter((category) =>
+        reg.test(category.value)
+      );
+      clientCopy.billCategories = newList;
+      setClientCategories(clientCopy);
+    } else {
+      setClientCategories(client);
+    }
+  };
 
   const columns = [
     {
       title: "Category",
       dataIndex: "category",
+      sorter: (a, b) => a.category.localeCompare(b.category),
     },
     {
       title: "Actions",
       dataIndex: "actions",
-      render: (_, render, _2) => (
+      render: (_, record, _2) => (
         <Space size="small">
-          <Button type="link">Edit</Button>
+          <Button type="link">
+            <Link to={`categories/${record.key}/edit`}>Edit</Link>
+          </Button>
           <Divider type="vertical" />
           <Popconfirm
             title="Are you sure you want to delete this category?"
             okText="Yes"
             cancelText="No"
+            onConfirm={(e) => handleDelete(record)}
           >
             <Button type="link">Delete</Button>
           </Popconfirm>
@@ -105,12 +161,17 @@ const ManageCategories = () => {
     },
   };
 
+  useEffect(() => {
+    setClientCategories(client);
+  }, [client]);
+
   return (
     <>
       <Input.Search
         className={classes.SearchInput}
         placeholder="Category"
         prefix={<TableOutlined />}
+        onChange={inputChangeHandler}
         allowClear
       />
       <Table
