@@ -16,7 +16,6 @@ import classes from "./ManageUsers.module.css";
 const ManageUser = () => {
   const { client, setClient } = useContext(UserContext);
   const [clientDisplay, setClientDisplay] = useState({});
-  const [loading, setLoading] = useState(false);
 
   const tableDataFromClientState =
     clientDisplay.users &&
@@ -25,10 +24,8 @@ const ManageUser = () => {
       ...user,
     }));
 
-  const handlePaid = async (e, record) => {
+  const handlePaid = async (record) => {
     try {
-      setLoading(true);
-
       const userId = record.id;
       const { data } = await axios.patch(
         `/api/v1/clients/users/${userId}`,
@@ -44,21 +41,21 @@ const ManageUser = () => {
         const userIndex = clientCopy.users.findIndex(
           (user) => user._id === userId
         );
+
         const updatedUser = {
           ...clientCopy.users[userIndex],
           balance: 0,
           paid: true,
         };
+
         clientCopy.users[userIndex] = updatedUser;
 
         setClient(clientCopy);
 
-        message.success(`${data.data.user.name} mark as paid.`);
+        message.success(`User ${data.data.user.name} mark as paid.`);
       }
-      setLoading(false);
     } catch (error) {
       console.log(error.message);
-      setLoading(false);
     }
   };
 
@@ -147,9 +144,8 @@ const ManageUser = () => {
           <Button
             className={classes.ActionCol}
             type="link"
-            onClick={(e) => handlePaid(e, record)}
-            loading={loading}
-            key={record.id}
+            onClick={(e) => handlePaid(record)}
+            disabled={record.paid}
           >
             Mark as Paid
           </Button>
@@ -166,11 +162,11 @@ const ManageUser = () => {
     },
   ];
 
+  const tableColumns = columns.map((item) => ({ ...item }));
+
   useEffect(() => {
     setClientDisplay(client);
   }, [client]);
-
-  const tableColumns = columns.map((item) => ({ ...item }));
 
   return (
     <>
