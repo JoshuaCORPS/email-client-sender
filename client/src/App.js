@@ -15,6 +15,7 @@ import ManageUsers from "./Containers/ManageUsers/ManageUsers";
 import EditUser from "./Containers/EditUser/EditUser";
 import AddCategory from "./Containers/AddCategory/AddCategory";
 import ManageCategories from "./Containers/ManageCategories/ManageCategories";
+import EditCategory from "./Containers/EditCategory/EditCategory";
 
 const App = () => {
   return (
@@ -27,6 +28,16 @@ const App = () => {
               defaultOpenSub="sub2"
               defaultKey="4"
               content={<EditUser />}
+            />
+          )}
+        />
+        <Route
+          path="/categories/:category/edit"
+          render={() => (
+            <Dashboard
+              defaultOpenSub="sub3"
+              defaultKey="6"
+              content={<EditCategory />}
             />
           )}
         />
