@@ -9,8 +9,16 @@ const AppError = require('../util/appError');
 exports.addUser = catchAsync(async (req, res, next) => {
   const client = await Client.findById(req.client.id);
 
-  if (client.users.some((user) => user.email === req.body.email))
-    return next(new AppError('This user already exist!', 400));
+  if (
+    client.users.some(
+      (user) =>
+        user.email === req.body.email &&
+        user.billCategory === req.body.billCategory
+    )
+  )
+    return next(
+      new AppError('This user already exist in this billing category!', 400)
+    );
 
   if (req.body.contactNumber && !req.body.contactNumber.startsWith('09'))
     return next(new AppError("Contact number must start with '09...'", 400));
@@ -105,6 +113,9 @@ exports.updateUser = catchAsync(async (req, res, next) => {
   const index = client.users.findIndex((user) => user.id === req.params.userid);
 
   if (index === -1) return next(new AppError('user not found', 404));
+
+  if (req.body.contactNumber && !req.body.contactNumber.startsWith('09'))
+    return next(new AppError("Contact number must start with '09...'", 400));
 
   const filteredBody = filterObj(
     req.body,
