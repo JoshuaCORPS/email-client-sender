@@ -1,3 +1,7 @@
+.CardHeight {
+  height: 100%;
+}
+
 .CardTextSize {
   font-size: 30px;
 }

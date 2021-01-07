@@ -7,7 +7,10 @@ const { Text } = Typography;
 
 const CardOverview = ({ title, description, Icon = "" }) => {
   return (
-    <Card title={<Text type="secondary">{title}</Text>}>
+    <Card
+      className={classes.CardHeight}
+      title={<Text type="secondary">{title}</Text>}
+    >
       <Meta
         className={classes.CardTextSize}
         avatar={Icon && <Icon />}
