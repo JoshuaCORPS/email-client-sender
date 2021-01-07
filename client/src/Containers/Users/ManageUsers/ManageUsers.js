@@ -10,6 +10,7 @@ import classes from "./ManageUsers.module.css";
 const ManageUser = () => {
   const { client, setClient } = useContext(UserContext);
   const [clientDisplay, setClientDisplay] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const tableDataFromClientState =
     clientDisplay.users &&
@@ -20,6 +21,8 @@ const ManageUser = () => {
 
   const handlePaid = async (record) => {
     try {
+      setLoading(true);
+
       const userId = record.id;
       const { data } = await axios.patch(
         `/api/v1/clients/users/${userId}`,
@@ -47,9 +50,12 @@ const ManageUser = () => {
         setClient(clientCopy);
 
         message.success(`User ${data.data.user.name} mark as paid.`);
+
+        setLoading(false);
       }
     } catch (error) {
       console.log(error.message);
+      setLoading(false);
     }
   };
 
@@ -67,7 +73,7 @@ const ManageUser = () => {
     }
   };
 
-  const uColumns = usersColumns(classes, client, handlePaid);
+  const uColumns = usersColumns(classes, client, handlePaid, loading);
   const tableColumns = uColumns.map((item) => ({ ...item }));
 
   useEffect(() => {
