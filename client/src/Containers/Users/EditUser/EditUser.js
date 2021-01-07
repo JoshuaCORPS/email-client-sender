@@ -50,7 +50,7 @@ const EditUser = ({ match }) => {
           ReactDOM.render("", document.getElementById("alert"));
       };
 
-      await submitData(
+      const result = await submitData(
         "PATCH",
         endpoint,
         values,
@@ -60,16 +60,18 @@ const EditUser = ({ match }) => {
         3000
       );
 
-      const clientCopy = { ...client };
-      clientCopy.users[currentUser] = {
-        ...clientCopy.users[currentUser],
-        ...values,
-      };
+      if (result.status === "success") {
+        const clientCopy = { ...client };
+        clientCopy.users[currentUser] = {
+          ...clientCopy.users[currentUser],
+          ...values,
+        };
 
-      if (values.balance <= "0") clientCopy.users[currentUser].paid = true;
-      else clientCopy.users[currentUser].paid = false;
+        if (values.balance <= "0") clientCopy.users[currentUser].paid = true;
+        else clientCopy.users[currentUser].paid = false;
 
-      setClient(clientCopy);
+        setClient(clientCopy);
+      }
 
       setLoading(false);
     } catch (error) {
