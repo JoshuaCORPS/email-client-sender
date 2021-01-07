@@ -7,7 +7,7 @@ const ClientInfo = ({ photo, name, role, classes }) => (
   <Row className={classes.RowMargin} justify="space-between" align="middle">
     <Col span={6}>
       <Avatar
-        src={`https://e-sender.herokuapp.com/img/users/${photo}`}
+        src={`https://e-sender.herokuapp.com/img/users/${photo && photo}`}
         alt={`${name} picture`}
         size={{ xs: 60, sm: 60, md: 60, lg: 60, xl: 60, xxl: 60 }}
       />
