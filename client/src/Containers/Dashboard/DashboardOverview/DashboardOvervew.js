@@ -9,7 +9,7 @@ import {
   userCategorieOptions,
   paidUsersOptions,
 } from "../../../util/charts-data";
-import CardOverview from "./CardOverview/CardOverview";
+import CardOverview from "../../../Components/Dashboard/CardOverview/CardOverview";
 import classes from "./DashboardOverview.module.css";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
@@ -17,11 +17,11 @@ const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 const DashboardOvervew = () => {
   const { client } = useContext(UserContext);
 
-  let expectedIncome = 0;
-
-  client.users &&
-    client.users.forEach(
-      (user) => (expectedIncome += user.monthlyBill + user.balance)
+  let expectedIncome =
+    client.users &&
+    client.users.reduce(
+      (prev, curr) => prev + curr.monthlyBill + curr.balance,
+      0
     );
 
   return (
@@ -46,7 +46,9 @@ const DashboardOvervew = () => {
         <Col className={classes.CardMargin} xs={24} md={24} lg={8}>
           <CardOverview
             title="Expected Income this Month"
-            description={`₱ ${numberFormatter(expectedIncome)}.00`}
+            description={`₱ ${
+              expectedIncome && numberFormatter(expectedIncome)
+            }.00`}
           />
         </Col>
       </Row>
