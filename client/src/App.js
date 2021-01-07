@@ -7,6 +7,7 @@ import ForgotPassword from "./Containers/Authentication/ForgotPassword/ForgotPas
 import ResetPassword from "./Containers/Authentication/ResetPassword/ResetPassword";
 import VerifyAccount from "./Containers/Authentication/VerifyAccount/VerifyAccount";
 import Dashboard from "./Containers/Dashboard/Dashboard";
+import DashboardOverview from "./Containers/Dashboard/DashboardOverview/DashboardOvervew";
 import MailUsers from "./Containers/Users/MailUsers/MailUsers";
 import AddUser from "./Containers/Users/AddUser/AddUser";
 import ManageUsers from "./Containers/Users/ManageUsers/ManageUsers";
@@ -146,7 +147,9 @@ const App = () => (
       {/* Route for main content */}
       <Route
         path="/"
-        render={() => <Dashboard defaultKey="1" content={<h3>Dashboard</h3>} />}
+        render={() => (
+          <Dashboard defaultKey="1" content={<DashboardOverview />} />
+        )}
       />
     </Switch>
   </main>
