@@ -8,7 +8,7 @@ import {
 import numberFormatter from "./numberFormatter";
 import DropdownActionMenu from "../Components/Dashboard/DropdownActionMenu/DropdownActionMenu";
 
-export const usersColumns = (classes, client, handlePaid) => {
+export const usersColumns = (classes, client, handlePaid, loading) => {
   return [
     {
       title: "Name",
@@ -82,6 +82,7 @@ export const usersColumns = (classes, client, handlePaid) => {
             type="link"
             onClick={(e) => handlePaid(record)}
             disabled={record.paid}
+            loading={loading}
           >
             Mark as Paid
           </Button>
