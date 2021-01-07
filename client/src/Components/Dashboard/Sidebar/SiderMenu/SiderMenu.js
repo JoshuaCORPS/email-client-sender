@@ -8,7 +8,7 @@ import {
   UsergroupAddOutlined,
   LogoutOutlined,
   SettingOutlined,
-  TableOutlined,
+  UnorderedListOutlined,
 } from "@ant-design/icons";
 
 const { SubMenu } = Menu;
@@ -59,7 +59,7 @@ const SiderMenu = ({ sub, skey, classes }) => (
     </SubMenu>
 
     {/* Categories Menu */}
-    <SubMenu key="sub3" icon={<TableOutlined />} title="Categories">
+    <SubMenu key="sub3" icon={<UnorderedListOutlined />} title="Categories">
       <Menu.Item key="5">
         <Link to="/categories/add-category">Add Category</Link>
       </Menu.Item>
