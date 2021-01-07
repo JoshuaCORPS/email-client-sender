@@ -130,7 +130,7 @@ const UpdateInfo = () => {
           className={classes.AvatarMargin}
           id="clientphoto"
           src={`https://e-sender.herokuapp.com/img/users/${
-            client.photo ? client.photo : "default.jpg"
+            client.photo && client.photo
           }`}
           size={{ xs: 60, sm: 60, md: 60, lg: 60, xl: 60, xxl: 60 }}
         />
