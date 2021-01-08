@@ -8,7 +8,8 @@
     "start:dev": "nodemon ./server/server.js",
     "start:prod": "NODE_ENV=production nodemon ./server/server.js",
     "debug:dev": "ndb ./server/server.js",
-    "debug:prod": "NODE_ENV=production ndb ./server/server.js"
+    "debug:prod": "NODE_ENV=production ndb ./server/server.js",
+    "test": "NODE_ENV=production mocha --recursive server/test --timeout 10000 --exit"
   },
   "keywords": [],
   "author": "JoshuaCORPS",
@@ -36,5 +37,10 @@
   },
   "engines": {
     "node": "12.14.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "mocha": "^8.2.1"
   }
 }
