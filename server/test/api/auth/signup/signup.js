@@ -34,53 +34,53 @@ describe('Auth Register API Endpoint', () => {
       .catch((err) => done(err));
   });
 
-  // it('Ok, it should create a new client', (done) => {
-  //   const newClient = {
-  //     name: 'test sender',
-  //     email: 'clientsender@mailsac.com',
-  //     contactNumber: '09123465789',
-  //     address: 'Marilao Bulacan',
-  //     password: 'testpassword',
-  //     passwordConfirm: 'testpassword',
-  //   };
+  it('Ok, it should create a new client', (done) => {
+    const newClient = {
+      name: 'test sender',
+      email: 'clientsender@mailsac.com',
+      contactNumber: '09123465789',
+      address: 'Marilao Bulacan',
+      password: 'testpassword',
+      passwordConfirm: 'testpassword',
+    };
 
-  //   chai
-  //     .request(app)
-  //     .post('/api/v1/auth/register')
-  //     .send(newClient)
-  //     .then((response) => {
-  //       response.should.have.status(201);
-  //       response.body.should.have.property('message');
-  //       response.body.should.have.property('status').eq('success');
-  //       done();
-  //     })
-  //     .catch((err) => done(err));
-  // });
+    chai
+      .request(app)
+      .post('/api/v1/auth/register')
+      .send(newClient)
+      .then((response) => {
+        response.should.have.status(201);
+        response.body.should.have.property('message');
+        response.body.should.have.property('status').eq('success');
+        done();
+      })
+      .catch((err) => done(err));
+  });
 
-  // it('Fail, it should NOT create a new client (duplicate)', (done) => {
-  //   const newClient = {
-  //     name: 'test sender',
-  //     email: 'clientsender@mailsac.com',
-  //     contactNumber: '09123465789',
-  //     address: 'Marilao Bulacan',
-  //     password: 'testpassword',
-  //     passwordConfirm: 'testpassword',
-  //   };
+  it('Fail, it should NOT create a new client (duplicate)', (done) => {
+    const newClient = {
+      name: 'test sender',
+      email: 'clientsender@mailsac.com',
+      contactNumber: '09123465789',
+      address: 'Marilao Bulacan',
+      password: 'testpassword',
+      passwordConfirm: 'testpassword',
+    };
 
-  //   chai
-  //     .request(app)
-  //     .post('/api/v1/auth/register')
-  //     .send(newClient)
-  //     .then((response) => {
-  //       response.should.have.status(400);
-  //       response.body.should.have.property('status').eq('fail');
-  //       response.body.should.have
-  //         .property('message')
-  //         .eq('Email already exist.');
-  //       done();
-  //     })
-  //     .catch((err) => done(err));
-  // });
+    chai
+      .request(app)
+      .post('/api/v1/auth/register')
+      .send(newClient)
+      .then((response) => {
+        response.should.have.status(400);
+        response.body.should.have.property('status').eq('fail');
+        response.body.should.have
+          .property('message')
+          .eq('Email already exist.');
+        done();
+      })
+      .catch((err) => done(err));
+  });
 
   it('Fail, It should NOT create a new client (no name)', (done) => {
     const newClient = {
