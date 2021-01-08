@@ -14,7 +14,7 @@ chai.should();
 
 chai.use(chaiHttp);
 
-describe('Auth API', () => {
+describe('Auth Register API Endpoint', () => {
   before((done) => {
     mongoose
       .connect(DB, {
@@ -34,61 +34,55 @@ describe('Auth API', () => {
       .catch((err) => done(err));
   });
 
-  it('It should POST a new client', (done) => {
-    const newClient = {
-      name: 'test sender',
-      email: 'clientsender@mailsac.com',
-      contactNumber: '09123465789',
-      address: 'Marilao Bulacan',
-      password: 'testpassword',
-      passwordConfirm: 'testpassword',
-    };
+  // it('Ok, it should create a new client', (done) => {
+  //   const newClient = {
+  //     name: 'test sender',
+  //     email: 'clientsender@mailsac.com',
+  //     contactNumber: '09123465789',
+  //     address: 'Marilao Bulacan',
+  //     password: 'testpassword',
+  //     passwordConfirm: 'testpassword',
+  //   };
 
-    chai
-      .request(app)
-      .post('/api/v1/auth/register')
-      .send(newClient)
-      .then((response) => {
-        response.should.have.status(201);
-        response.body.should.have.property('message');
-        response.body.should.have.property('status').eq('success');
-        done();
-      })
-      .catch((err) => {
-        console.log(err);
-        done(err);
-      });
-  });
+  //   chai
+  //     .request(app)
+  //     .post('/api/v1/auth/register')
+  //     .send(newClient)
+  //     .then((response) => {
+  //       response.should.have.status(201);
+  //       response.body.should.have.property('message');
+  //       response.body.should.have.property('status').eq('success');
+  //       done();
+  //     })
+  //     .catch((err) => done(err));
+  // });
 
-  it('It should NOT POST a new client (duplicate)', (done) => {
-    const newClient = {
-      name: 'test sender',
-      email: 'clientsender@mailsac.com',
-      contactNumber: '09123465789',
-      address: 'Marilao Bulacan',
-      password: 'testpassword',
-      passwordConfirm: 'testpassword',
-    };
+  // it('Fail, it should NOT create a new client (duplicate)', (done) => {
+  //   const newClient = {
+  //     name: 'test sender',
+  //     email: 'clientsender@mailsac.com',
+  //     contactNumber: '09123465789',
+  //     address: 'Marilao Bulacan',
+  //     password: 'testpassword',
+  //     passwordConfirm: 'testpassword',
+  //   };
 
-    chai
-      .request(app)
-      .post('/api/v1/auth/register')
-      .send(newClient)
-      .then((response) => {
-        response.should.have.status(400);
-        response.body.should.have.property('status').eq('fail');
-        response.body.should.have
-          .property('message')
-          .eq('Email already exist.');
-        done();
-      })
-      .catch((err) => {
-        console.log(err);
-        done(err);
-      });
-  });
+  //   chai
+  //     .request(app)
+  //     .post('/api/v1/auth/register')
+  //     .send(newClient)
+  //     .then((response) => {
+  //       response.should.have.status(400);
+  //       response.body.should.have.property('status').eq('fail');
+  //       response.body.should.have
+  //         .property('message')
+  //         .eq('Email already exist.');
+  //       done();
+  //     })
+  //     .catch((err) => done(err));
+  // });
 
-  it('It should NOT POST a new client without name prop', (done) => {
+  it('Fail, It should NOT create a new client (no name)', (done) => {
     const newClient = {
       email: 'clientsender@mailsac.com',
       contactNumber: '09123465789',
@@ -109,12 +103,10 @@ describe('Auth API', () => {
           .eq('Please provide your name');
         done();
       })
-      .catch((err) => {
-        done(err);
-      });
+      .catch((err) => done(err));
   });
 
-  it('It should NOT POST a new client without email prop', (done) => {
+  it('Fail, it should NOT create a new client (no email)', (done) => {
     const newClient = {
       name: 'test sender',
       contactNumber: '09123465789',
@@ -135,12 +127,10 @@ describe('Auth API', () => {
           .eq('Please provide your email');
         done();
       })
-      .catch((err) => {
-        done(err);
-      });
+      .catch((err) => done(err));
   });
 
-  it('It should NOT POST a new client with invalid email', (done) => {
+  it('Fail, it should NOT create a new client (invalid email format)', (done) => {
     const newClient = {
       name: 'test sender',
       email: 'invalid@email',
@@ -162,12 +152,10 @@ describe('Auth API', () => {
           .eq('Please provide a valid email.');
         done();
       })
-      .catch((err) => {
-        done(err);
-      });
+      .catch((err) => done(err));
   });
 
-  it('It should NOT POST a new client without contactNumber prop', (done) => {
+  it('Fail, it should NOT create a new client (no contactNumber)', (done) => {
     const newClient = {
       name: 'test sender',
       email: 'clientsender@mailsac.com',
@@ -188,12 +176,10 @@ describe('Auth API', () => {
           .eq('Please provide your contact number');
         done();
       })
-      .catch((err) => {
-        done(err);
-      });
+      .catch((err) => done(err));
   });
 
-  it("It should NOT POST a new client with contactNumber that's not starting with 09", (done) => {
+  it('Fail, it should NOT create a new client (contactNumber must start with 09...)', (done) => {
     const newClient = {
       name: 'test sender',
       email: 'clientsender@mailsac.com',
@@ -215,12 +201,10 @@ describe('Auth API', () => {
           .eq("Contact number must start with '09...'");
         done();
       })
-      .catch((err) => {
-        done(err);
-      });
+      .catch((err) => done(err));
   });
 
-  it('It should NOT POST a new client with contactNumber that have length of < 11', (done) => {
+  it('Fail, it should NOT create a new client (contactNumber must only have 11 digits)', (done) => {
     const newClient = {
       name: 'test sender',
       email: 'clientsender@mailsac.com',
@@ -242,12 +226,10 @@ describe('Auth API', () => {
           .eq('Contact number must only have 11 digits');
         done();
       })
-      .catch((err) => {
-        done(err);
-      });
+      .catch((err) => done(err));
   });
 
-  it('It should NOT POST a new client with contactNumber that have length of > 11', (done) => {
+  it('Fail, it should NOT create a new client (contactNumber must only have 11 digits)', (done) => {
     const newClient = {
       name: 'test sender',
       email: 'clientsender@mailsac.com',
@@ -269,12 +251,10 @@ describe('Auth API', () => {
           .eq('Contact number must only have 11 digits');
         done();
       })
-      .catch((err) => {
-        done(err);
-      });
+      .catch((err) => done(err));
   });
 
-  it('It should NOT POST a new client without address', (done) => {
+  it('Fail, it should NOT create a new client (no address)', (done) => {
     const newClient = {
       name: 'test sender',
       email: 'clientsender@mailsac.com',
@@ -295,12 +275,10 @@ describe('Auth API', () => {
           .eq('Please provide your address');
         done();
       })
-      .catch((err) => {
-        done(err);
-      });
+      .catch((err) => done(err));
   });
 
-  it('It should NOT POST a new client without password', (done) => {
+  it('Fail, it should NOT create a new client (no password)', (done) => {
     const newClient = {
       name: 'test sender',
       email: 'clientsender@mailsac.com',
@@ -321,12 +299,10 @@ describe('Auth API', () => {
           .eq("Please provide your password.\nPassword don't match");
         done();
       })
-      .catch((err) => {
-        done(err);
-      });
+      .catch((err) => done(err));
   });
 
-  it('It should NOT POST a new client with password that have length of < 8 char', (done) => {
+  it('Fail, it should NOT create a new client (password must have atleast 8 char)', (done) => {
     const newClient = {
       name: 'test sender',
       email: 'clientsender@mailsac.com',
@@ -348,12 +324,10 @@ describe('Auth API', () => {
           .eq('Password must have atleast 8 characters');
         done();
       })
-      .catch((err) => {
-        done(err);
-      });
+      .catch((err) => done(err));
   });
 
-  it('It should NOT POST a new client without confirming password', (done) => {
+  it('Fail, it should NOT create a new client (must confirm password)', (done) => {
     const newClient = {
       name: 'test sender',
       email: 'clientsender@mailsac.com',
@@ -374,12 +348,10 @@ describe('Auth API', () => {
           .eq('Please confirm your password');
         done();
       })
-      .catch((err) => {
-        done(err);
-      });
+      .catch((err) => done(err));
   });
 
-  it('It should NOT POST a new client with password and confirmpassword that dont match', (done) => {
+  it("Fail, it should NOT create a new client (password don't match)", (done) => {
     const newClient = {
       name: 'test sender',
       email: 'clientsender@mailsac.com',
@@ -401,12 +373,10 @@ describe('Auth API', () => {
           .eq("Password don't match");
         done();
       })
-      .catch((err) => {
-        done(err);
-      });
+      .catch((err) => done(err));
   });
 
-  it('It should NOT POST a new client without password and confirmpassword prop', (done) => {
+  it('Fail, it should NOT create a new client (no password and passwordConfirm)', (done) => {
     const newClient = {
       name: 'test sender',
       email: 'clientsender@mailsac.com',
@@ -426,8 +396,26 @@ describe('Auth API', () => {
           .eq('Please confirm your password.\nPlease provide your password');
         done();
       })
-      .catch((err) => {
-        done(err);
-      });
+      .catch((err) => done(err));
+  });
+
+  it('Fail, it should NOT create a new client (no data)', (done) => {
+    const newClient = {};
+
+    chai
+      .request(app)
+      .post('/api/v1/auth/register')
+      .send(newClient)
+      .then((response) => {
+        response.should.have.status(400);
+        response.body.should.have.property('status').eq('fail');
+        response.body.should.have
+          .property('message')
+          .eq(
+            'Please confirm your password.\nPlease provide your password.\nPlease provide your address.\nPlease provide your contact number.\nPlease provide your email.\nPlease provide your name'
+          );
+        done();
+      })
+      .catch((err) => done(err));
   });
 });
