@@ -56,7 +56,7 @@ describe('Auth UpdatePassword API Endpoint', () => {
     await mongoose.connection.close();
   });
 
-  it('Okay, it should update the client', async () => {
+  it('Ok, it should update the client', async () => {
     const clientPassword = {
       currentPassword: 'testpassword',
       password: 'testpassword',
