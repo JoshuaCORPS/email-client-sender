@@ -28,3 +28,9 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
+      env: 
+        JWT_SECRET:  ${{ secrets.JWT_SECRET }}
+        JWT_EXPIRES_IN: ${{ secrets.JWT_EXPIRES_IN }}
+        SEND_GRID_USERNAME: ${{ secrets.SEND_GRID_USERNAME }}
+        SEND_GRID_PASSWORD: ${{ secrets.SEND_GRID_PASSWORD }}
+        
