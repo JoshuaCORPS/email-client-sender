@@ -239,9 +239,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 exports.resetPassword = catchAsync(async (req, res, next) => {
   const { password, passwordConfirm } = req.body;
 
-  if (!password || !passwordConfirm)
-    return next(new AppError('Please provide your password to proceed', 400));
-
   const hashedToken = crypto
     .createHash('sha256')
     .update(req.params.token)
@@ -254,6 +251,9 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   if (!client)
     return next(new AppError('Token is invalid or has expired', 400));
+
+  if (!password || !passwordConfirm)
+    return next(new AppError('Please provide your password to proceed', 400));
 
   client.password = password;
   client.passwordConfirm = passwordConfirm;
