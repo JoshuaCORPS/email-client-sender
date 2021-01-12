@@ -232,7 +232,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    message: 'Token sent to mail',
+    message: 'Token sent to your email',
   });
 });
 
