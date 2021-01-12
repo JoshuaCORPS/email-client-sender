@@ -1,7 +1,7 @@
 const { expect } = require('chai');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 const supertest = require('supertest');
 const mongoose = require('mongoose');
-const { MongoMemoryServer } = require('mongodb-memory-server');
 
 const Client = require('../../../../models/clientModel');
 const app = require('../../../../app');
@@ -13,11 +13,11 @@ const request = supertest(app);
 describe('Auth UpdatePassword API Endpoint', () => {
   let token;
 
-  const exec = (data, token) => {
+  const exec = (data, token = '') => {
     return request
       .patch('/api/v1/auth/update-password')
       .send(data)
-      .set('Cookie', `${token ? `jwt=${token}` : ''}`);
+      .set('Cookie', `jwt=${token}`);
   };
 
   const exec2 = (data) => {
@@ -53,7 +53,7 @@ describe('Auth UpdatePassword API Endpoint', () => {
   });
 
   after(async () => {
-    await mongoose.connection.close();
+    await mongoose.disconnect();
   });
 
   it('Ok, it should update the client', async () => {
@@ -65,6 +65,7 @@ describe('Auth UpdatePassword API Endpoint', () => {
 
     const response = await exec(clientPassword, token);
     expect(response.status).to.equal(200);
+    expect(response.body.status).to.equal('success');
     expect(response.body.data).to.have.property('client');
   });
 
