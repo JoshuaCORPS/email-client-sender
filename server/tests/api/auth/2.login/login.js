@@ -1,8 +1,7 @@
 const { expect } = require('chai');
-const supertest = require('supertest');
-
-const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
+const supertest = require('supertest');
+const mongoose = require('mongoose');
 
 const Client = require('../../../../models/clientModel');
 const app = require('../../../../app');
@@ -12,8 +11,6 @@ const mongoServer = new MongoMemoryServer();
 const request = supertest(app);
 
 describe('Auth Login API Endpoint', () => {
-  let client = {};
-
   const exec = (data) => {
     return request.post('/api/v1/auth/login').send(data);
   };
