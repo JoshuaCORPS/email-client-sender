@@ -1,59 +1,32 @@
 const { expect } = require('chai');
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const supertest = require('supertest');
-const mongoose = require('mongoose');
-
-const Client = require('../../../../models/clientModel');
-const app = require('../../../../app');
 require('dotenv').config();
 
-const mongoServer = new MongoMemoryServer();
-const request = supertest(app);
+const { login, updatePassword } = require('../../../util/response');
+const {
+  connect,
+  disconnect,
+  createClient,
+  deleteClients,
+} = require('../../../util/db');
 
 describe('Auth UpdatePassword API Endpoint', () => {
   let token;
 
-  const exec = (data, token = '') => {
-    return request
-      .patch('/api/v1/auth/update-password')
-      .send(data)
-      .set('Cookie', `jwt=${token}`);
-  };
-
-  const exec2 = (data) => {
-    return request.post('/api/v1/auth/login').send(data);
-  };
-
   before(async () => {
-    const mongoURI = await mongoServer.getUri();
-    await mongoose.connect(mongoURI, {
-      useCreateIndex: true,
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-    });
+    await connect();
+    await createClient();
 
-    await Client.create({
-      name: 'dummy sender',
-      email: 'dummysender@mailsac.com',
-      contactNumber: '09123465789',
-      address: 'Marilao Bulacan',
-      password: 'testpassword',
-      passwordConfirm: 'testpassword',
-      active: true,
-    });
-
-    const clientInfo = {
+    const response = await login({
       email: 'dummysender@mailsac.com',
       password: 'testpassword',
-    };
+    });
 
-    const response = await exec2(clientInfo);
     token = response.body.token;
   });
 
   after(async () => {
-    await mongoose.disconnect();
+    await deleteClients();
+    await disconnect();
   });
 
   it('Ok, it should update the client', async () => {
@@ -63,7 +36,7 @@ describe('Auth UpdatePassword API Endpoint', () => {
       passwordConfirm: 'testpassword',
     };
 
-    const response = await exec(clientPassword, token);
+    const response = await updatePassword(clientPassword, token);
     expect(response.status).to.equal(200);
     expect(response.body.status).to.equal('success');
     expect(response.body.data).to.have.property('client');
@@ -76,7 +49,7 @@ describe('Auth UpdatePassword API Endpoint', () => {
       passwordConfirm: 'testpassword',
     };
 
-    const response = await exec(clientPassword, token);
+    const response = await updatePassword(clientPassword, token);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Incorrect Current Password!');
@@ -89,7 +62,7 @@ describe('Auth UpdatePassword API Endpoint', () => {
       passwordConfirm: 'testpassword',
     };
 
-    const response = await exec(clientPassword, token);
+    const response = await updatePassword(clientPassword, token);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal("Password don't match");
@@ -102,7 +75,7 @@ describe('Auth UpdatePassword API Endpoint', () => {
       passwordConfirm: 'testpassword',
     };
 
-    const response = await exec(clientPassword);
+    const response = await updatePassword(clientPassword);
     expect(response.status).to.equal(401);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Please login to continue');
@@ -114,7 +87,7 @@ describe('Auth UpdatePassword API Endpoint', () => {
       passwordConfirm: 'testpassword',
     };
 
-    const response = await exec(clientPassword, token);
+    const response = await updatePassword(clientPassword, token);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Please input your credentials!');
@@ -126,7 +99,7 @@ describe('Auth UpdatePassword API Endpoint', () => {
       passwordConfirm: 'testpassword',
     };
 
-    const response = await exec(clientPassword, token);
+    const response = await updatePassword(clientPassword, token);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Please input your credentials!');
@@ -138,7 +111,7 @@ describe('Auth UpdatePassword API Endpoint', () => {
       password: 'testpassword',
     };
 
-    const response = await exec(clientPassword, token);
+    const response = await updatePassword(clientPassword, token);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Please input your credentials!');
@@ -147,7 +120,7 @@ describe('Auth UpdatePassword API Endpoint', () => {
   it('Fail, it should NOT update (no data)', async () => {
     const clientPassword = {};
 
-    const response = await exec(clientPassword, token);
+    const response = await updatePassword(clientPassword, token);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Please input your credentials!');
