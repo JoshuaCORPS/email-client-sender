@@ -1,45 +1,23 @@
 const { expect } = require('chai');
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const mongoose = require('mongoose');
-const supertest = require('supertest');
 require('dotenv').config();
 
-const app = require('../../../../app');
-const Client = require('../../../../models/clientModel');
-const request = supertest(app);
-const mongoServer = new MongoMemoryServer();
+const { forgotPassword, resetPassword } = require('../../../util/response');
+const {
+  connect,
+  disconnect,
+  createClient,
+  deleteClients,
+} = require('../../../util/db');
 
 describe('Auth ForgotPassword API Endpoint', () => {
-  const exec = (data) => {
-    return request.post('/api/v1/auth/forgot-password').send(data);
-  };
-
-  const exec2 = (data, token) => {
-    return request.post(`/api/v1/auth/reset-password/${token}`).send(data);
-  };
-
   before(async () => {
-    const mongoURI = await mongoServer.getUri();
-    await mongoose.connect(mongoURI, {
-      useCreateIndex: true,
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-    });
-
-    await Client.create({
-      name: 'dummy sender',
-      email: 'dummysender@mailsac.com',
-      contactNumber: '09123465789',
-      address: 'Marilao Bulacan',
-      password: 'testpassword',
-      passwordConfirm: 'testpassword',
-      active: true,
-    });
+    await connect();
+    await createClient();
   });
 
   after(async () => {
-    await mongoose.disconnect();
+    await deleteClients();
+    await disconnect();
   });
 
   it('Ok, it should send the token in email client', async () => {
@@ -47,7 +25,7 @@ describe('Auth ForgotPassword API Endpoint', () => {
       email: 'dummysender@mailsac.com',
     };
 
-    const response = await exec(clientEmail);
+    const response = await forgotPassword(clientEmail);
     expect(response.status).to.equal(200);
     expect(response.body.status).to.equal('success');
     expect(response.body.message).to.equal('Token sent to your email');
@@ -58,7 +36,7 @@ describe('Auth ForgotPassword API Endpoint', () => {
       email: 'email@email.com',
     };
 
-    const response = await exec(clientEmail);
+    const response = await forgotPassword(clientEmail);
     expect(response.status).to.equal(404);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('client not found');
@@ -70,7 +48,7 @@ describe('Auth ForgotPassword API Endpoint', () => {
       passwordConfirm: 'newPassword',
     };
 
-    const response = await exec2(clientNewPassword, 'randomtoken');
+    const response = await resetPassword(clientNewPassword, 'randomtoken');
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Token is invalid or has expired');
