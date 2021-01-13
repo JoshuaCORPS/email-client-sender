@@ -1,31 +1,17 @@
 const { expect } = require('chai');
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const supertest = require('supertest');
-const mongoose = require('mongoose');
-
-const app = require('../../../../app');
 require('dotenv').config();
 
-const mongoServer = new MongoMemoryServer();
-const request = supertest(app);
+const { register } = require('../../../util/response');
+const { connect, disconnect, deleteClients } = require('../../../util/db');
 
 describe('Auth Register API Endpoint', () => {
-  const exec = (data) => {
-    return request.post('/api/v1/auth/register').send(data);
-  };
-
   before(async () => {
-    const mongoURI = await mongoServer.getUri();
-    await mongoose.connect(mongoURI, {
-      useCreateIndex: true,
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-    });
+    await connect();
   });
 
   after(async () => {
-    await mongoose.disconnect();
+    await deleteClients();
+    await disconnect();
   });
 
   it('Ok, it should create a new client', async () => {
@@ -38,7 +24,7 @@ describe('Auth Register API Endpoint', () => {
       passwordConfirm: 'testpassword',
     };
 
-    const response = await exec(newClient);
+    const response = await register(newClient);
     expect(response.status).to.equal(201);
     expect(response.body.status).to.equal('success');
     expect(response.body).to.have.property('message');
@@ -54,7 +40,7 @@ describe('Auth Register API Endpoint', () => {
       passwordConfirm: 'testpassword',
     };
 
-    const response = await exec(newClient);
+    const response = await register(newClient);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Email already exist.');
@@ -69,7 +55,7 @@ describe('Auth Register API Endpoint', () => {
       passwordConfirm: 'testpassword',
     };
 
-    const response = await exec(newClient);
+    const response = await register(newClient);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Please provide your name');
@@ -84,7 +70,7 @@ describe('Auth Register API Endpoint', () => {
       passwordConfirm: 'testpassword',
     };
 
-    const response = await exec(newClient);
+    const response = await register(newClient);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Please provide your email');
@@ -100,7 +86,7 @@ describe('Auth Register API Endpoint', () => {
       passwordConfirm: 'testpassword',
     };
 
-    const response = await exec(newClient);
+    const response = await register(newClient);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Please provide a valid email.');
@@ -115,7 +101,7 @@ describe('Auth Register API Endpoint', () => {
       passwordConfirm: 'testpassword',
     };
 
-    const response = await exec(newClient);
+    const response = await register(newClient);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal(
@@ -133,7 +119,7 @@ describe('Auth Register API Endpoint', () => {
       passwordConfirm: 'testpassword',
     };
 
-    const response = await exec(newClient);
+    const response = await register(newClient);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal(
@@ -151,7 +137,7 @@ describe('Auth Register API Endpoint', () => {
       passwordConfirm: 'testpassword',
     };
 
-    const response = await exec(newClient);
+    const response = await register(newClient);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal(
@@ -169,7 +155,7 @@ describe('Auth Register API Endpoint', () => {
       passwordConfirm: 'testpassword',
     };
 
-    const response = await exec(newClient);
+    const response = await register(newClient);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal(
@@ -186,7 +172,7 @@ describe('Auth Register API Endpoint', () => {
       passwordConfirm: 'testpassword',
     };
 
-    const response = await exec(newClient);
+    const response = await register(newClient);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Please provide your address');
@@ -201,7 +187,7 @@ describe('Auth Register API Endpoint', () => {
       passwordConfirm: 'testpassword',
     };
 
-    const response = await exec(newClient);
+    const response = await register(newClient);
     expect(response.status).to.eq(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal(
@@ -219,7 +205,7 @@ describe('Auth Register API Endpoint', () => {
       passwordConfirm: '1234567',
     };
 
-    const response = await exec(newClient);
+    const response = await register(newClient);
     expect(response.status).to.eq(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal(
@@ -236,7 +222,7 @@ describe('Auth Register API Endpoint', () => {
       password: '12345678',
     };
 
-    const response = await exec(newClient);
+    const response = await register(newClient);
     expect(response.status).to.eq(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Please confirm your password');
@@ -252,7 +238,7 @@ describe('Auth Register API Endpoint', () => {
       passwordConfirm: '123456789',
     };
 
-    const response = await exec(newClient);
+    const response = await register(newClient);
     expect(response.status).to.eq(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal("Password don't match");
@@ -266,7 +252,7 @@ describe('Auth Register API Endpoint', () => {
       address: 'Marilao Bulacan',
     };
 
-    const response = await exec(newClient);
+    const response = await register(newClient);
     expect(response.status).to.eq(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal(
@@ -277,7 +263,7 @@ describe('Auth Register API Endpoint', () => {
   it('Fail, it should NOT create a new client (no data)', async () => {
     const newClient = {};
 
-    const response = await exec(newClient);
+    const response = await register(newClient);
     expect(response.status).to.eq(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal(
