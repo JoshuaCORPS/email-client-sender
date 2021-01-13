@@ -10,13 +10,6 @@ exports.addUser = catchAsync(async (req, res, next) => {
   const client = await Client.findById(req.client.id);
 
   if (
-    !client.billCategories.some(
-      (category) => req.body.billCategory === category.value
-    )
-  )
-    return next(new AppError('Category not found', 404));
-
-  if (
     client.users.some(
       (user) =>
         user.email === req.body.email &&
@@ -40,6 +33,15 @@ exports.addUser = catchAsync(async (req, res, next) => {
     'billDate',
     'billCategory'
   );
+
+  if (
+    Object.keys(filteredBody).length !== 0 &&
+    req.body.billCategory &&
+    !client.billCategories.some(
+      (category) => req.body.billCategory === category.value
+    )
+  )
+    return next(new AppError('Category not found', 404));
 
   if (req.body.balance) filteredBody.balance = req.body.balance;
 
@@ -124,13 +126,6 @@ exports.updateUser = catchAsync(async (req, res, next) => {
   if (req.body.contactNumber && !req.body.contactNumber.startsWith('09'))
     return next(new AppError("Contact number must start with '09...'", 400));
 
-  if (
-    !client.billCategories.some(
-      (category) => req.body.billCategory === category.value
-    )
-  )
-    return next(new AppError('Category not found', 404));
-
   if (client.users[index].billCategory !== req.body.billCategory)
     if (
       client.users.some(
@@ -154,6 +149,15 @@ exports.updateUser = catchAsync(async (req, res, next) => {
     'balance',
     'billCategory'
   );
+
+  if (
+    Object.keys(filteredBody).length !== 0 &&
+    req.body.billCategory &&
+    !client.billCategories.some(
+      (category) => req.body.billCategory === category.value
+    )
+  )
+    return next(new AppError('Category not found', 404));
 
   const user = await User.findByIdAndUpdate(req.params.userid, filteredBody, {
     new: true,
