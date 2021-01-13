@@ -127,6 +127,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
     return next(new AppError("Contact number must start with '09...'", 400));
 
   if (
+    req.body.billCategory &&
     !client.billCategories.some(
       (category) => req.body.billCategory === category.value
     )
