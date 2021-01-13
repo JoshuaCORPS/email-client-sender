@@ -1,58 +1,32 @@
 const { expect } = require('chai');
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const supertest = require('supertest');
-const mongoose = require('mongoose');
 require('dotenv').config();
 
-const app = require('../../../../app');
-const Client = require('../../../../models/clientModel');
-const request = supertest(app);
-const mongoServer = new MongoMemoryServer();
+const { login, updateInfo } = require('../../../util/response');
+const {
+  connect,
+  disconnect,
+  createClient,
+  deleteClients,
+} = require('../../../util/db/index');
 
 describe('Auth UpdateInfo API EndPoint', () => {
   let token;
 
-  const exec = (data, token = '') => {
-    return request
-      .patch('/api/v1/auth/update-info')
-      .send(data)
-      .set('Cookie', `jwt=${token}`);
-  };
-
-  const exec2 = (data) => {
-    return request.post('/api/v1/auth/login').send(data);
-  };
-
   before(async () => {
-    const mongoURI = await mongoServer.getUri();
-    await mongoose.connect(mongoURI, {
-      useCreateIndex: true,
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-    });
+    await connect();
+    await createClient();
 
-    await Client.create({
-      name: 'dummy sender',
-      email: 'dummysender@mailsac.com',
-      contactNumber: '09123465789',
-      address: 'Marilao Bulacan',
-      password: 'testpassword',
-      passwordConfirm: 'testpassword',
-      active: true,
-    });
-
-    const clientInfo = {
+    const response = await login({
       email: 'dummysender@mailsac.com',
       password: 'testpassword',
-    };
+    });
 
-    const response = await exec2(clientInfo);
     token = response.body.token;
   });
 
   after(async () => {
-    await mongoose.disconnect();
+    await deleteClients();
+    await disconnect();
   });
 
   it('Ok, it should update client information', async () => {
@@ -61,7 +35,7 @@ describe('Auth UpdateInfo API EndPoint', () => {
       address: 'new address',
     };
 
-    const response = await exec(clientInfo, token);
+    const response = await updateInfo(clientInfo, token);
     expect(response.status).to.equal(200);
     expect(response.body.status).to.equal('success');
     expect(response.body.data).to.have.property('client');
@@ -73,7 +47,7 @@ describe('Auth UpdateInfo API EndPoint', () => {
       address: 'new address',
     };
 
-    const response = await exec(clientInfo);
+    const response = await updateInfo(clientInfo);
     expect(response.status).to.equal(401);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Please login to continue');
@@ -87,7 +61,7 @@ describe('Auth UpdateInfo API EndPoint', () => {
       address: 'new address',
     };
 
-    const response = await exec(clientInfo, token);
+    const response = await updateInfo(clientInfo, token);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Please provide your name');
@@ -101,7 +75,7 @@ describe('Auth UpdateInfo API EndPoint', () => {
       address: 'new address',
     };
 
-    const response = await exec(clientInfo, token);
+    const response = await updateInfo(clientInfo, token);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Please provide your email');
@@ -115,7 +89,7 @@ describe('Auth UpdateInfo API EndPoint', () => {
       address: 'new address',
     };
 
-    const response = await exec(clientInfo, token);
+    const response = await updateInfo(clientInfo, token);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Please provide a valid email.');
@@ -129,7 +103,7 @@ describe('Auth UpdateInfo API EndPoint', () => {
       address: 'new address',
     };
 
-    const response = await exec(clientInfo, token);
+    const response = await updateInfo(clientInfo, token);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal(
@@ -145,7 +119,7 @@ describe('Auth UpdateInfo API EndPoint', () => {
       address: 'new address',
     };
 
-    const response = await exec(clientInfo, token);
+    const response = await updateInfo(clientInfo, token);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal(
@@ -161,7 +135,7 @@ describe('Auth UpdateInfo API EndPoint', () => {
       address: 'new address',
     };
 
-    const response = await exec(clientInfo, token);
+    const response = await updateInfo(clientInfo, token);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal(
@@ -177,7 +151,7 @@ describe('Auth UpdateInfo API EndPoint', () => {
       address: 'new address',
     };
 
-    const response = await exec(clientInfo, token);
+    const response = await updateInfo(clientInfo, token);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal(
@@ -193,7 +167,7 @@ describe('Auth UpdateInfo API EndPoint', () => {
       address: '',
     };
 
-    const response = await exec(clientInfo, token);
+    const response = await updateInfo(clientInfo, token);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Please provide your address');
@@ -207,7 +181,7 @@ describe('Auth UpdateInfo API EndPoint', () => {
       address: '',
     };
 
-    const response = await exec(clientInfo, token);
+    const response = await updateInfo(clientInfo, token);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal(
