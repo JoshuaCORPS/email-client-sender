@@ -7,6 +7,7 @@ const {
   disconnect,
   createClient,
   deleteClients,
+  deleteUsers,
 } = require('../../../util/db');
 
 describe('Client Add User API Endpoint', () => {
@@ -26,6 +27,7 @@ describe('Client Add User API Endpoint', () => {
 
   after(async () => {
     await deleteClients();
+    await deleteUsers();
     await disconnect();
   });
 
@@ -44,6 +46,23 @@ describe('Client Add User API Endpoint', () => {
     expect(response.status).to.equal(201);
     expect(response.body.status).to.equal('success');
     expect(response.body.data).to.have.property('user');
+  });
+
+  it('Fail, it should NOT create new user (category not found)', async () => {
+    const newUser = {
+      name: 'Test User',
+      email: 'testuser@mailsac.com',
+      contactNumber: '09596798461',
+      address: 'Marilao Bulacan',
+      monthlyBill: 1600,
+      billDate: '12/22/2020',
+      billCategory: 'some category',
+    };
+
+    const response = await addUser(newUser, token);
+    expect(response.status).to.equal(404);
+    expect(response.body.status).to.equal('fail');
+    expect(response.body.message).to.equal('Category not found');
   });
 
   it('Fail, it should NOT create new user (user already exist in category)', async () => {
