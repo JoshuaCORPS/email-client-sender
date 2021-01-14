@@ -39,10 +39,22 @@ exports.addUser = (data, token = '') => {
     .set('Cookie', `jwt=${token}`);
 };
 
-exports.send = (requestType, endpoint, data) => {
-  return requestType(endpoint).send(data);
+exports.emailUsers = (data, token = '') => {
+  return request
+    .post('/api/v1/clients/send-email')
+    .send(data)
+    .set('Cookie', `jwt=${token}`);
 };
 
-exports.sendWithCookie = (requestType, endpoint, data = '', token = '') => {
-  return requestType(endpoint).send(data).set('Cookie', `jwt=${token}`);
+exports.getUser = (userid, token = '') => {
+  return request
+    .get(`/api/v1/clients/users/${userid}`)
+    .set('Cookie', `jwt=${token}`);
+};
+
+exports.updateUser = (userid, data, token = '') => {
+  return request
+    .patch(`/api/v1/clients/users/${userid}`)
+    .send(data)
+    .set('Cookie', `jwt=${token}`);
 };
