@@ -2,6 +2,7 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
 
 const Client = require('../../../models/clientModel');
+const User = require('../../../models/userModel');
 const mongoServer = new MongoMemoryServer();
 
 exports.connect = async () => {
@@ -27,9 +28,23 @@ exports.createClient = async () => {
     password: 'testpassword',
     passwordConfirm: 'testpassword',
     active: true,
+    billCategories: [
+      {
+        value: 'Internet',
+        slug: 'internet',
+      },
+      {
+        value: 'Electricity',
+        slug: 'electricity',
+      },
+    ],
   });
 };
 
 exports.deleteClients = async () => {
   await Client.deleteMany();
+};
+
+exports.deleteUsers = async () => {
+  await User.deleteMany();
 };
