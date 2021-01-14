@@ -1,33 +1,18 @@
 const { expect } = require('chai');
-const supertest = require('supertest');
 require('dotenv').config();
 
-const { send, sendWithCookie } = require('../../../util/response');
-const app = require('../../../../app');
-const request = supertest(app);
+const { login, addUser, getUser } = require('../../../util/response');
 const {
   connect,
   disconnect,
   createClient,
   deleteClients,
+  deleteUsers,
 } = require('../../../util/db');
 
 describe('Client Get User API Endpoint', () => {
   let token;
   let userid;
-
-  const exec = (userid, data, token) => {
-    return sendWithCookie(
-      request.get,
-      `/api/v1/clients/users/${userid}`,
-      data,
-      token
-    );
-  };
-
-  const exec2 = (data, token) => {
-    return sendWithCookie(request.post, '/api/v1/clients/users', data, token);
-  };
 
   before(async () => {
     await connect();
@@ -38,7 +23,7 @@ describe('Client Get User API Endpoint', () => {
       password: 'testpassword',
     };
 
-    const response = await send(request.post, '/api/v1/auth/login', clientInfo);
+    const response = await login(clientInfo);
     token = response.body.token;
 
     const newUser = {
@@ -51,31 +36,32 @@ describe('Client Get User API Endpoint', () => {
       billCategory: 'Internet',
     };
 
-    const response2 = await exec2(newUser, token);
+    const response2 = await addUser(newUser, token);
     userid = response2.body.data.user.id;
   });
 
   after(async () => {
     await deleteClients();
+    await deleteUsers();
     await disconnect();
   });
 
   it('Ok, it should get a user', async () => {
-    const response = await exec(userid, '', token);
+    const response = await getUser(userid, token);
     expect(response.status).to.equal(200);
     expect(response.body.status).to.equal('success');
     expect(response.body.data).to.have.property('user');
   });
 
   it('Fail, it should NOT get a user (not authenticated)', async () => {
-    const response = await exec(userid);
+    const response = await getUser(userid);
     expect(response.status).to.equal(401);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Please login to continue');
   });
 
   it('Fail, it should NOT get a user (wrong userid)', async () => {
-    const response = await exec('somerandomid', '', token);
+    const response = await getUser('somerandomid', token);
     expect(response.status).to.equal(404);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('user not found');
