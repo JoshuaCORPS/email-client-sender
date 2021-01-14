@@ -1,10 +1,7 @@
 const { expect } = require('chai');
-const supertest = require('supertest');
 require('dotenv').config();
 
-const { send, sendWithCookie } = require('../../../util/response');
-const app = require('../../../../app');
-const request = supertest(app);
+const { login, emailUsers } = require('../../../util/response');
 const {
   connect,
   disconnect,
@@ -15,15 +12,6 @@ const {
 describe('Client Send Email API Endpoint', () => {
   let token;
 
-  const exec = (data, token) => {
-    return sendWithCookie(
-      request.post,
-      '/api/v1/clients/send-email',
-      data,
-      token
-    );
-  };
-
   before(async () => {
     await connect();
     await createClient();
@@ -33,7 +21,7 @@ describe('Client Send Email API Endpoint', () => {
       password: 'testpassword',
     };
 
-    const response = await send(request.post, '/api/v1/auth/login', clientInfo);
+    const response = await login(clientInfo);
     token = response.body.token;
   });
 
@@ -48,7 +36,7 @@ describe('Client Send Email API Endpoint', () => {
       message: 'test message',
     };
 
-    const response = await exec(emailData, token);
+    const response = await emailUsers(emailData, token);
     expect(response.status).to.equal(200);
     expect(response.body.status).to.equal('success');
     expect(response.body.message).to.equal('Email successfully sent!');
@@ -60,7 +48,7 @@ describe('Client Send Email API Endpoint', () => {
       message: 'test message',
     };
 
-    const response = await exec(emailData);
+    const response = await emailUsers(emailData);
     expect(response.status).to.equal(401);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal('Please login to continue');
@@ -71,7 +59,7 @@ describe('Client Send Email API Endpoint', () => {
       message: 'test message',
     };
 
-    const response = await exec(emailData, token);
+    const response = await emailUsers(emailData, token);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal(
@@ -84,7 +72,7 @@ describe('Client Send Email API Endpoint', () => {
       subject: 'test subject',
     };
 
-    const response = await exec(emailData, token);
+    const response = await emailUsers(emailData, token);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal(
@@ -95,7 +83,7 @@ describe('Client Send Email API Endpoint', () => {
   it('Ok, it should NOT send the email (no data)', async () => {
     const emailData = {};
 
-    const response = await exec(emailData, token);
+    const response = await emailUsers(emailData, token);
     expect(response.status).to.equal(400);
     expect(response.body.status).to.equal('fail');
     expect(response.body.message).to.equal(
