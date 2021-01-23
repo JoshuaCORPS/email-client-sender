@@ -22,6 +22,7 @@ const errorController = require('./controllers/errorController');
 
 const AppError = require('./util/appError');
 const checkBillingDate = require('./util/checkBillDate');
+require('./services/cache');
 
 const app = express();
 
