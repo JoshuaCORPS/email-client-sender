@@ -19,10 +19,7 @@ const DashboardOvervew = () => {
 
   let expectedIncome =
     client.users &&
-    client.users.reduce(
-      (prev, curr) => prev + curr.monthlyBill + curr.balance,
-      0
-    );
+    client.users.reduce((prev, curr) => +prev + +curr.balance, 0);
 
   return (
     <>
@@ -53,7 +50,7 @@ const DashboardOvervew = () => {
         </Col>
       </Row>
 
-      <Row gutter={16}>
+      <Row gutter={8}>
         <Col className={classes.ChartSize} xs={24} md={12} lg={12}>
           <CanvasJSChart options={userCategorieOptions(client)} />
         </Col>
