@@ -33,4 +33,7 @@ jobs:
         JWT_EXPIRES_IN: ${{ secrets.JWT_EXPIRES_IN }}
         SEND_GRID_USERNAME: ${{ secrets.SEND_GRID_USERNAME }}
         SEND_GRID_PASSWORD: ${{ secrets.SEND_GRID_PASSWORD }}
+        REDIS_PORT: ${{ secrets.REDIS_PORT }}
+        REDIS_HOST:  ${{ secrets.REDIS_HOST }} 
+        REDIS_PASS:  ${{ secrets.REDIS_PASS }}
         
