@@ -35,7 +35,7 @@ exports.addUser = catchAsync(async (req, res, next) => {
   );
 
   if (
-    Object.keys(filteredBody).length !== 0 &&
+    Object.keys(filteredBody).length &&
     req.body.billCategory &&
     !client.billCategories.some(
       (category) => req.body.billCategory === category.value
