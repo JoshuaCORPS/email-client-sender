@@ -31,11 +31,11 @@ mongoose.Query.prototype.exec = async function () {
   if (cacheValue) {
     const doc = JSON.parse(cacheValue);
 
-    console.log('from cache');
-
-    return Array.isArray(doc) ? doc.map((d) => this.model(d)) : doc;
+    return Array.isArray(doc)
+      ? doc.map((d) => new this.model(d))
+      : new this.model(doc);
   }
-  console.log('from db');
+
   const result = await exec.apply(this, arguments);
 
   client.hset(
