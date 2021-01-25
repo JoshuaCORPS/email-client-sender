@@ -20,9 +20,6 @@ exports.addUser = catchAsync(async (req, res, next) => {
       new AppError('This user already exist in this billing category!', 400)
     );
 
-  if (req.body.contactNumber && !req.body.contactNumber.startsWith('09'))
-    return next(new AppError("Contact number must start with '09...'", 400));
-
   const filteredBody = filterObj(
     req.body,
     'name',
@@ -122,9 +119,6 @@ exports.updateUser = catchAsync(async (req, res, next) => {
   const index = client.users.findIndex((user) => user.id === req.params.userid);
 
   if (index === -1) return next(new AppError('user not found', 404));
-
-  if (req.body.contactNumber && !req.body.contactNumber.startsWith('09'))
-    return next(new AppError("Contact number must start with '09...'", 400));
 
   if (
     req.body.billCategory &&
