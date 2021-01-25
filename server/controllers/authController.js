@@ -58,9 +58,6 @@ exports.register = catchAsync(async (req, res, next) => {
     .update(verifyToken)
     .digest('hex');
 
-  if (req.body.contactNumber && !req.body.contactNumber.startsWith('09'))
-    return next(new AppError("Contact number must start with '09...'", 400));
-
   const filteredBody = filterObj(
     req.body,
     'name',
@@ -323,9 +320,6 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 });
 
 exports.updateInfo = catchAsync(async (req, res, next) => {
-  if (req.body.contactNumber && !req.body.contactNumber.startsWith('09'))
-    return next(new AppError("Contact number must start with '09...'", 400));
-
   const filteredBody = filterObj(
     req.body,
     'name',
