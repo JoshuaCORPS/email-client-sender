@@ -134,7 +134,10 @@ exports.updateUser = catchAsync(async (req, res, next) => {
   )
     return next(new AppError('Category not found', 404));
 
-  if (client.users[index].billCategory !== req.body.billCategory)
+  if (
+    client.users[index].billCategory !== req.body.billCategory ||
+    client.users[index].email !== req.body.email
+  )
     if (
       client.users.some(
         (user) =>
