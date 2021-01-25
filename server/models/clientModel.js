@@ -20,6 +20,12 @@ const clientSchema = new mongoose.Schema({
     minlength: [11, 'Contact number must only have 11 digits'],
     maxlength: [11, 'Contact number must only have 11 digits'],
     required: [true, 'Please provide your contact number'],
+    validate: {
+      validator: function (inputNumber) {
+        return inputNumber.startsWith('09');
+      },
+      message: "Contact number must start with '09...'",
+    },
   },
   address: {
     type: String,
